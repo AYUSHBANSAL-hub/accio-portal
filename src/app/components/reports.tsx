@@ -14,6 +14,7 @@ const Reports = () => {
   const { stateAvailableReports, setStateAvailableReports } = useReportStore(
     (state) => state
   );
+  const { setUserId, userId: storedUserId } = useReportStore();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -43,39 +44,50 @@ const Reports = () => {
   ];
 
   useEffect(() => {
-    if (!userId) return; // Wait for userId in the URL
+    if (userId && userId !== storedUserId) {
+      // Update userId in the store and clear previous data
+      setUserId(userId); // Save new userId
+      setStateAvailableReports(null); // Clear reports associated with the previous user
+      setAvailableReports(null); // Clear local reports
+      fetchReports(); // Fetch reports for the new userId
+    }
+  }, [userId, storedUserId, setUserId, setStateAvailableReports]);
 
-    const fetchReports = async () => {
-      try {
-        const response = await axios.get(`/api/gsheet?userId=${userId}`);
-        console.log(response);
-        setStateAvailableReports(response.data);
-        // Now match the available reports by comparing with the data returned
-        const availableReportTabs = Object.keys(response.data); // Get the tabs like "main", "Resume_Audit", etc.
+  useEffect(() => {
+    if (stateAvailableReports) {
+      // Use reports from the store if available
+      populateReportsFromState(stateAvailableReports);
+      setLoading(false);
+    } else if (userId && !availableReports) {
+      // Fetch reports if not already loaded
+      fetchReports();
+    }
+  }, [userId, stateAvailableReports]);
 
-        const finalReports = reports.filter(
-          (report) => availableReportTabs.includes(report.tab) // Check if the tab is available in the user's data
-        );
+  const fetchReports = async () => {
+    try {
+      setLoading(true); // Set loading state
+      setError(null); // Clear previous errors
+      const response = await axios.get(`/api/gsheet?userId=${userId}`);
+      setStateAvailableReports(response.data); // Save to global state
+      populateReportsFromState(response.data); // Populate local reports
+    } catch (err) {
+      setError("Error fetching available reports");
+    } finally {
+      setLoading(false); // Stop loading spinner
+    }
+  };
 
-        setAvailableReports(finalReports);
-        setLoading(false);
-      } catch (err) {
-        setError("Error fetching available reports");
-        setLoading(false);
-      }
-    };
-
-    fetchReports();
-  }, [userId]);
-
-  // if (loading)
-  //   return <div className="text-center text-xl text-[#307fec]">Loading...</div>;
-  // if (error)
-  //   return <div className="text-center text-xl text-red-500">{error}</div>;
+  const populateReportsFromState = (data: any) => {
+    const availableReportTabs = Object.keys(data); // Get available tabs
+    const finalReports = reports.filter((report) =>
+      availableReportTabs.includes(report.tab)
+    );
+    setAvailableReports(finalReports); // Update local state for UI
+  };
 
   return (
     <div className="bg-[#307fec] flex flex-col justify-start items-center pt-10 pb-4 px-4">
-      
       <div className="w-full bg-white rounded-xl shadow-2xl text-center p-8">
         {/* Header Section */}
         <div className="relative">

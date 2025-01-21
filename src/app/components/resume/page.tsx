@@ -1,8 +1,7 @@
 "use client"; // Indicates client-side component
 
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import axios from "axios";
+import { useRouter } from "next/navigation"; // Import useRouter
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -13,7 +12,6 @@ import {
   Legend,
   ArcElement,
 } from "chart.js";
-import { Bar, Pie } from "react-chartjs-2";
 import { useReportStore } from "@/app/state/store";
 
 ChartJS.register(
@@ -29,11 +27,13 @@ ChartJS.register(
 const ResumeAuditReport = () => {
   // const searchParams = useSearchParams();
   // const userId = searchParams?.get('userId');  // Get userId from URL query parameters
-
+  const router = useRouter(); // Initialize router
+  
   const [data, setData] = useState<any | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   // const [error, setError] = useState<string | null>(null);
   const { stateAvailableReports } = useReportStore((state) => state);
+  const { userId} = useReportStore((state) => state);
   useEffect(() => {
     const getresumeauditdata = () => {
       console.log(stateAvailableReports.Resume_Audit[0]);
@@ -64,34 +64,6 @@ const ResumeAuditReport = () => {
     return <div className="text-center text-xl text-[#307fec]">Loading...</div>;
   // if (error) return <div className="text-center text-xl text-red-500">{error}</div>;
 
-  // Chart Data Preparation
-  const resumeScore = data?.Resume_Score || 0;
-  const resumeReady = data?.Resume_Ready === "TRUE" ? 1 : 0;
-
-  const barChartData = {
-    labels: ["Resume Score"],
-    datasets: [
-      {
-        label: "Resume Score",
-        data: [resumeScore],
-        backgroundColor: ["#307fec"],
-        borderRadius: 8,
-        borderColor: ["#1e77d0"],
-        borderWidth: 1,
-      },
-    ],
-  };
-
-  const pieChartData = {
-    labels: ["Resume Ready", "Not Ready"],
-    datasets: [
-      {
-        data: [resumeReady, 1 - resumeReady],
-        backgroundColor: ["#307fec", "#2b2f35"],
-        hoverBackgroundColor: ["#1e77d0", "#3a3e47"],
-      },
-    ],
-  };
   // Extract Boolean Questions
   const booleanQuestions = Object.entries(data).filter(
     ([key, value]) => value === "TRUE" || value === "FALSE"
@@ -100,6 +72,12 @@ const ResumeAuditReport = () => {
   return (
     <div className="min-h-screen bg-[#1f88e4] flex justify-center items-center py-10 px-4">
       <div className="max-w-4xl w-full bg-[#022555] rounded-xl p-8 shadow-2xl text-white">
+      <button
+          onClick={() => router.push(`/?userId=${userId}`)} // Redirect to the reports page
+          className="px-4 py-2 mb-6 bg-[#307fec] text-white font-semibold rounded hover:bg-[#1e77d0] transition"
+        >
+          Back to Reports
+        </button>
         <h1 className="text-4xl font-semibold text-[#fffff] text-center mb-8 mt-5">
           Resume Audit Report for{" "}
           <span className="font-bold text-[#fff]">{data.user_name}</span>
