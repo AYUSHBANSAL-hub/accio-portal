@@ -142,7 +142,7 @@ const ResumeAuditReport = () => {
           </div>
         </div>
         {/* Boolean Questions Section */}
-        <div className="bg-[#f2f2f2] p-6 rounded-lg shadow-lg mb-6">
+        <div className="bg-[#ffffff] p-6 rounded-lg shadow-lg mb-6">
           {/* <h2 className="text-xl font-semibold text-[#e5e7eb] mb-4">Resume Criteria</h2> */}
           <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {booleanQuestions.map(([key, value]) => (
