@@ -40,7 +40,7 @@ export async function GET(request: Request) {
     for (const tab of sheetTabs) {
       const result = await sheets.spreadsheets.values.get({
         spreadsheetId,
-        range: `${tab}!A:Z`, // Get all columns (A to Z) for the tab
+        range: `${tab}`, // Get all columns (A to Z) for the tab
       });
 
       const rows = result.data.values;

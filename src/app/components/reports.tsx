@@ -4,12 +4,14 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
+import { useReportStore } from "../state/store";
 
 const Reports = () => {
   const searchParams = useSearchParams();
   const userId = searchParams?.get("userId"); // Get userId from URL query parameters
 
   const [availableReports, setAvailableReports] = useState<any>(null);
+  const { stateAvailableReports, setStateAvailableReports } = useReportStore(state => state);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -17,7 +19,7 @@ const Reports = () => {
   const reports = [
     {
       reportname: "Resume Audit",
-      path: "resume_report",
+      path: "resume",
       tab: "Resume_Audit",
       logo: "https://banner2.cleanpng.com/20181129/bpv/kisspng-computer-icons-clip-art-sql-server-reporting-servi-bo-co-cskh-1713916901306.webp",
       description: "Detailed analysis of resume."
@@ -45,7 +47,7 @@ const Reports = () => {
       try {
         const response = await axios.get(`/api/gsheet?userId=${userId}`);
         console.log(response);
-
+        setStateAvailableReports(response.data);
         // Now match the available reports by comparing with the data returned
         const availableReportTabs = Object.keys(response.data); // Get the tabs like "main", "Resume_Audit", etc.
         
@@ -102,7 +104,7 @@ const Reports = () => {
                   {report.description}
                 </p>
                 <button className="px-4 py-2 rounded-full text-white bg-[#307fec] hover:bg-[#1e77d0] transition-colors duration-300">
-                  <Link href={report.path}>View Report</Link>
+                  <Link href={`/components/${report.path}`}>View Report</Link>
                 </button>
               </div>
             ))}
