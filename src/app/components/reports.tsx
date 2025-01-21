@@ -141,8 +141,7 @@ const Reports = () => {
             {/* Right Section: Image */}
             <div className="flex-1">
               <img
-                src="https://img.freepik.com/free-vector/business-people-working-searching-applicants_1262-19729.jpg?t=st=1737463863~exp=1737467463~hmac=bd85e51538819b65bf2fe89bc1e672a1c326a6dba25c3603391bbbf7fcb91f4d&w=1800"
-                alt="Business People Illustration"
+                src="hero.png"
                 className="w-full h-auto object-cover"
               />
             </div>
