@@ -1,4 +1,4 @@
-"use client"; // Indicates client-side component
+'use client'; // Indicates client-side component
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
@@ -9,33 +9,32 @@ const Reports = () => {
   const searchParams = useSearchParams();
   const userId = searchParams?.get("userId"); // Get userId from URL query parameters
 
-  const [availableReports, setAvailableReports] = useState<any>(
-    null
-  );
+  const [availableReports, setAvailableReports] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Predefined report data
   const reports = [
     {
       reportname: "Resume Audit",
       path: "resume_report",
       tab: "Resume_Audit",
       logo: "https://banner2.cleanpng.com/20181129/bpv/kisspng-computer-icons-clip-art-sql-server-reporting-servi-bo-co-cskh-1713916901306.webp",
-      description:"abc"
+      description: "Detailed analysis of resume."
     },
     {
-      reportname: "Main",
-      path: "resume_report",
+      reportname: "Main Report",
+      path: "main_report",
       tab: "main",
       logo: "https://banner2.cleanpng.com/20181129/bpv/kisspng-computer-icons-clip-art-sql-server-reporting-servi-bo-co-cskh-1713916901306.webp",
-      description:"abc main check"
+      description: "Comprehensive overview of the main data."
     },
     {
-      reportname: "Main",
-      path: "resume_report",
-      tab: "mains",
+      reportname: "AccioMatrix Submissions",
+      path: "acciomatrix_submissions",
+      tab: "AccioMatrix_Submission",
       logo: "https://banner2.cleanpng.com/20181129/bpv/kisspng-computer-icons-clip-art-sql-server-reporting-servi-bo-co-cskh-1713916901306.webp",
-      description:"abc main check"
+      description: "Performance insights and evaluations."
     },
   ];
 
@@ -45,9 +44,16 @@ const Reports = () => {
     const fetchReports = async () => {
       try {
         const response = await axios.get(`/api/gsheet?userId=${userId}`);
-        const final_reports=reports.filter(report => response.data.availableReports.includes(report.tab))
-        setAvailableReports(final_reports);
-        console.log(final_reports);
+        console.log(response);
+
+        // Now match the available reports by comparing with the data returned
+        const availableReportTabs = Object.keys(response.data); // Get the tabs like "main", "Resume_Audit", etc.
+        
+        const finalReports = reports.filter(report =>
+          availableReportTabs.includes(report.tab)  // Check if the tab is available in the user's data
+        );
+        
+        setAvailableReports(finalReports);
         setLoading(false);
       } catch (err) {
         setError("Error fetching available reports");
@@ -56,21 +62,20 @@ const Reports = () => {
     };
 
     fetchReports();
-    
   }, [userId]);
 
   if (loading)
-    return <div className="text-center text-xl text-[#307fec]">Loading</div>;
+    return <div className="text-center text-xl text-[#307fec]">Loading...</div>;
   if (error)
     return <div className="text-center text-xl text-red-500">{error}</div>;
 
   return (
     <div className="h-screen bg-[#307fec] flex justify-center items-center py-10 px-4">
-      <div className="w-full h-full  bg-[#ffffff] rounded-xl p-8 shadow-2xl text-white">
+      <div className="w-full h-full bg-[#ffffff] rounded-xl p-8 shadow-2xl text-white">
         <img
-          src={`https://acciojob.com/src/Navbar/logo.svg`}
+          src="https://acciojob.com/src/Navbar/logo.svg"
           alt="Logo"
-          className="w-100 h-100 m-auto rounded-full"
+          className="w-20 h-20 m-auto rounded-full"
         />
         <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#307fec] to-[#022555] text-center mb-8 mt-5 animate-title">
           AVAILABLE REPORTS
@@ -88,13 +93,13 @@ const Reports = () => {
                     {report.reportname}
                   </div>
                   <img
-                    src={`https://banner2.cleanpng.com/20181129/bpv/kisspng-computer-icons-clip-art-sql-server-reporting-servi-bo-co-cskh-1713916901306.webp`}
+                    src={report.logo}
                     alt="Logo"
                     className="w-12 h-12 rounded-full border-2 border-[#307fec] p-2"
                   />
                 </div>
                 <p className="text-[#e5e7eb] text-sm mb-4">
-                 {report.description}
+                  {report.description}
                 </p>
                 <button className="px-4 py-2 rounded-full text-white bg-[#307fec] hover:bg-[#1e77d0] transition-colors duration-300">
                   <Link href={report.path}>View Report</Link>

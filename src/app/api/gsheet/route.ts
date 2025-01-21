@@ -34,26 +34,43 @@ export async function GET(request: Request) {
       return new Response("No tabs found in the sheet", { status: 404 });
     }
 
-    // Now check each tab for data corresponding to the userId
-    const availableReports: string[] = [];
+    const allReports: Record<string, any[]> = {};
 
+    // Now check each tab for data corresponding to the userId
     for (const tab of sheetTabs) {
       const result = await sheets.spreadsheets.values.get({
         spreadsheetId,
-        range: `${tab}!A:A`, // Check the first column for the userId
+        range: `${tab}!A:Z`, // Get all columns (A to Z) for the tab
       });
 
       const rows = result.data.values;
 
-      if (rows && rows.some((row) => row[0] === userId)) {
-        availableReports.push(tab); // Add the tab name if userId is found in that tab
+      if (rows && rows.length > 0) {
+        // Get the headers (first row) as keys
+        const headers = rows[0];
+
+        // Find rows that contain the userId in the first column (User_id)
+        const userRows = rows.slice(1).filter((row) => row[0] === userId);
+
+        // Map rows to objects with column headers as keys
+        const mappedRows = userRows.map((row) => {
+          const mappedRow: Record<string, string> = {};
+          headers.forEach((header, index) => {
+            mappedRow[header] = row[index] || ''; // Map header to row cell
+          });
+          return mappedRow;
+        });
+
+        // If there are rows for the userId, add them to the allReports object
+        if (mappedRows.length > 0) {
+          allReports[tab] = mappedRows;
+        }
       }
     }
 
-    if (availableReports.length > 0) {
-      return new Response(JSON.stringify({ availableReports }), {
-        status: 200,
-      });
+    // If we have data for the userId, return it
+    if (Object.keys(allReports).length > 0) {
+      return new Response(JSON.stringify(allReports), { status: 200 });
     } else {
       return new Response("No reports found for this user", { status: 404 });
     }
