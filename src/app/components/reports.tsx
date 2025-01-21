@@ -35,7 +35,7 @@ const Reports = () => {
     },
     {
       reportname: "AccioMatrix Submissions",
-      path: "acciomatrix_submissions",
+      path: "acciomatrix_Submission",
       tab: "AccioMatrix_Submission",
       logo: "https://banner2.cleanpng.com/20181129/bpv/kisspng-computer-icons-clip-art-sql-server-reporting-servi-bo-co-cskh-1713916901306.webp",
       description: "Performance insights and evaluations.",

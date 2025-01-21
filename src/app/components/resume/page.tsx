@@ -2,27 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation"; // Import useRouter
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  ArcElement,
-} from "chart.js";
-import { useReportStore } from "@/app/state/store";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  ArcElement
-);
+import { useReportStore } from "@/app/state/store";
 
 const ResumeAuditReport = () => {
   // const searchParams = useSearchParams();
