@@ -27,8 +27,8 @@ const Reports = () => {
       description: "Detailed analysis of resume.",
     },
     {
-      reportname: "Main Report",
-      path: "main_report",
+      reportname: "Progress Report",
+      path: "progress",
       tab: "main",
       logo: "https://banner2.cleanpng.com/20181129/bpv/kisspng-computer-icons-clip-art-sql-server-reporting-servi-bo-co-cskh-1713916901306.webp",
       description: "Comprehensive overview of the main data.",
