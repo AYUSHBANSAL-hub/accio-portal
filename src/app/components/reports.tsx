@@ -68,16 +68,16 @@ const Reports = () => {
     fetchReports();
   }, [userId]);
 
-  if (loading)
-    return <div className="text-center text-xl text-[#307fec]">Loading...</div>;
-  if (error)
-    return <div className="text-center text-xl text-red-500">{error}</div>;
+  // if (loading)
+  //   return <div className="text-center text-xl text-[#307fec]">Loading...</div>;
+  // if (error)
+  //   return <div className="text-center text-xl text-red-500">{error}</div>;
 
   return (
     <div className="bg-[#307fec] flex flex-col justify-start items-center pt-10 pb-4 px-4">
-      {/* Header Section */}
+      
       <div className="w-full bg-white rounded-xl shadow-2xl text-center p-8">
-        {/* Placeholder for Background Image */}
+        {/* Header Section */}
         <div className="relative">
           <div className=" mx-auto flex flex-col md:flex-row items-center overflow-hidden">
             {/* Left Section: Header Content */}
@@ -110,41 +110,63 @@ const Reports = () => {
           </div>
         </div>
 
-        {availableReports && availableReports.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-5">
-            {availableReports.map((report: any, index: any) => (
-              <div
-                key={index}
-                className="bg-[#1c2533] p-6 rounded-xl shadow-2xl hover:scale-105 transform transition-transform duration-300 ease-in-out"
-              >
-                <div className="flex justify-between items-center mb-5">
-                  <div className="text-2xl font-semibold text-white hover:text-gray-300 transition-colors duration-300">
-                    {report.reportname}
+        {/* Reports Section */}
+        <div className="w-full bg-white p-8">
+          <h2 className="text-3xl font-semibold text-black text-center mb-6">
+            Available Reports
+          </h2>
+          {error ? (
+            <div className="text-center text-xl text-red-500">{error}</div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {loading ? (
+                Array(3)
+                  .fill(null)
+                  .map((_, index) => (
+                    <div
+                      key={index}
+                      className="bg-gray-200 animate-pulse rounded-xl p-6"
+                    >
+                      <div className="h-10 bg-gray-300 rounded mb-4"></div>
+                      <div className="h-16 bg-gray-300 rounded mb-4"></div>
+                      <div className="h-6 bg-gray-300 rounded w-3/4"></div>
+                    </div>
+                  ))
+              ) : availableReports && availableReports.length > 0 ? (
+                availableReports.map((report: any, index: any) => (
+                  <div
+                    key={index}
+                    className="bg-[#1c2533] p-6 rounded-xl shadow-2xl hover:scale-105 transform transition-transform duration-300 ease-in-out"
+                  >
+                    <div className="flex justify-between items-center mb-5">
+                      <div className="text-2xl font-semibold text-white hover:text-gray-300 transition-colors duration-300">
+                        {report.reportname}
+                      </div>
+                      <img
+                        src={report.logo}
+                        alt={`${report.reportname} Logo`}
+                        className="w-12 h-12 rounded-full border-2 border-[#307fec] p-2"
+                      />
+                    </div>
+                    <p className="text-gray-300 text-sm mb-4">
+                      {report.description}
+                    </p>
+                    <Link href={`/components/${report.path}`}>
+                      <button className="w-full px-4 py-2 rounded text-white bg-[#307fec] hover:bg-[#1e77d0] transition-colors duration-300">
+                        View Report
+                      </button>
+                    </Link>
                   </div>
-                  <img
-                    src={report.logo}
-                    alt={`${report.reportname} Logo`}
-                    className="w-12 h-12 rounded-full border-2 border-[#307fec] p-2"
-                  />
+                ))
+              ) : (
+                <div className="text-center text-lg text-gray-400">
+                  No reports available for this user.
                 </div>
-                <p className="text-gray-300 text-sm mb-4">
-                  {report.description}
-                </p>
-                <Link href={`/components/${report.path}`}>
-                  <button className="w-full px-4 py-2 rounded text-white bg-[#307fec] hover:bg-[#1e77d0] transition-colors duration-300">
-                    View Report
-                  </button>
-                </Link>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center text-lg text-gray-400">
-            No reports available for this user.
-          </div>
-        )}
+              )}
+            </div>
+          )}
+        </div>
       </div>
-
       {/* How It Works Section */}
       <div className="w-full mt-10 bg-white rounded-xl p-8">
         <h2 className="text-3xl font-semibold text-black text-center">
