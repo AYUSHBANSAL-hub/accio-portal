@@ -8,13 +8,12 @@ import { useReportStore } from "../state/store";
 
 const Reports = () => {
   const searchParams = useSearchParams();
-  const userId = searchParams?.get("userId"); // Get userId from URL query parameters
+  const userIdFromParams = searchParams?.get("userId"); // Get userId from URL query parameters
 
   const [availableReports, setAvailableReports] = useState<any>(null);
-  const { stateAvailableReports, setStateAvailableReports } = useReportStore(
-    (state) => state
-  );
-  const { setUserId, userId: storedUserId } = useReportStore();
+  const { stateAvailableReports, setStateAvailableReports, setUserId, userId: storedUserId } =
+    useReportStore();
+
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -43,47 +42,75 @@ const Reports = () => {
     },
   ];
 
+  /**
+   * Sync state with localStorage on component load
+   */
   useEffect(() => {
-    if (userId && userId !== storedUserId) {
-      // Update userId in the store and clear previous data
-      setUserId(userId); // Save new userId
-      setStateAvailableReports(null); // Clear reports associated with the previous user
-      setAvailableReports(null); // Clear local reports
-      fetchReports(); // Fetch reports for the new userId
-    }
-  }, [userId, storedUserId, setUserId, setStateAvailableReports]);
+    const storedReports = localStorage.getItem("stateAvailableReports");
+    const storedUserId = localStorage.getItem("userId");
 
+    if (!stateAvailableReports && storedReports) {
+      setStateAvailableReports(JSON.parse(storedReports));
+    }
+
+    if (!storedUserId && userIdFromParams) {
+      setUserId(userIdFromParams);
+      localStorage.setItem("userId", userIdFromParams);
+    }
+  }, [setStateAvailableReports, stateAvailableReports, setUserId, userIdFromParams]);
+
+  /**
+   * Handle userId changes or API fetching
+   */
   useEffect(() => {
-    if (stateAvailableReports) {
-      // Use reports from the store if available
+    if (userIdFromParams && userIdFromParams !== storedUserId) {
+      // Update the userId in state and localStorage
+      setUserId(userIdFromParams);
+      localStorage.setItem("userId", userIdFromParams);
+
+      // Clear previous state
+      setStateAvailableReports(null);
+      setAvailableReports(null);
+
+      // Fetch new data
+      fetchReports(userIdFromParams);
+    } else if (!stateAvailableReports && userIdFromParams) {
+      // Fetch data if stateAvailableReports is null
+      fetchReports(userIdFromParams);
+    } else if (stateAvailableReports) {
+      // Use available state data to populate reports
       populateReportsFromState(stateAvailableReports);
       setLoading(false);
-    } else if (userId && !availableReports) {
-      // Fetch reports if not already loaded
-      fetchReports();
     }
-  }, [userId, stateAvailableReports]);
+  }, [userIdFromParams, stateAvailableReports, storedUserId, setUserId]);
 
-  const fetchReports = async () => {
+  /**
+   * Fetch reports for the given userId
+   */
+  const fetchReports = async (userId: string) => {
     try {
-      setLoading(true); // Set loading state
-      setError(null); // Clear previous errors
+      setLoading(true);
+      setError(null);
       const response = await axios.get(`/api/gsheet?userId=${userId}`);
-      setStateAvailableReports(response.data); // Save to global state
-      populateReportsFromState(response.data); // Populate local reports
+      setStateAvailableReports(response.data);
+      localStorage.setItem("stateAvailableReports", JSON.stringify(response.data));
+      populateReportsFromState(response.data);
     } catch (err) {
-      setError("Error fetching available reports");
+      setError("Error fetching available reports.");
     } finally {
-      setLoading(false); // Stop loading spinner
+      setLoading(false);
     }
   };
 
+  /**
+   * Populate available reports based on API response
+   */
   const populateReportsFromState = (data: any) => {
-    const availableReportTabs = Object.keys(data); // Get available tabs
+    const availableReportTabs = Object.keys(data);
     const finalReports = reports.filter((report) =>
       availableReportTabs.includes(report.tab)
     );
-    setAvailableReports(finalReports); // Update local state for UI
+    setAvailableReports(finalReports);
   };
 
   return (

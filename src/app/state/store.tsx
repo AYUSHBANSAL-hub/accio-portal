@@ -7,19 +7,28 @@ interface ReportState {
   setUserId: (id: string) => void; // Action to update userId
 }
 
-// Helper to load data from localStorage
 const loadFromStorage = (key: string): any => {
   if (typeof window !== "undefined") {
-    const storedValue = localStorage.getItem(key);
-    return storedValue ? JSON.parse(storedValue) : null;
+    try {
+      const storedValue = localStorage.getItem(key);
+      return storedValue ? JSON.parse(storedValue) : null;
+    } catch (error) {
+      console.error(`Error parsing localStorage key "${key}":`, error);
+      // Clear invalid entry to prevent future errors
+      localStorage.removeItem(key);
+      return null;
+    }
   }
   return null;
 };
 
-// Helper to save data to localStorage
-const saveToStorage = (key: string, value: any) => {
+const saveToStorage = (key: string, value: any): void => {
   if (typeof window !== "undefined") {
-    localStorage.setItem(key, JSON.stringify(value));
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch (error) {
+      console.error(`Error saving key "${key}" to localStorage:`, error);
+    }
   }
 };
 
