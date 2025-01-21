@@ -26,7 +26,9 @@ export async function GET(request: Request) {
     });
 
     // Get the tab names from the metadata
-    const sheetTabs = sheetMetadata.data.sheets?.map(sheet => sheet.properties?.title);
+    const sheetTabs = sheetMetadata.data.sheets?.map(
+      (sheet) => sheet.properties?.title
+    );
 
     if (!sheetTabs || sheetTabs.length === 0) {
       return new Response("No tabs found in the sheet", { status: 404 });
@@ -38,18 +40,20 @@ export async function GET(request: Request) {
     for (const tab of sheetTabs) {
       const result = await sheets.spreadsheets.values.get({
         spreadsheetId,
-        range: `${tab}!A:A`,  // Check the first column for the userId
+        range: `${tab}!A:A`, // Check the first column for the userId
       });
 
       const rows = result.data.values;
 
-      if (rows && rows.some(row => row[0] === userId)) {
-        availableReports.push(tab);  // Add the tab name if userId is found in that tab
+      if (rows && rows.some((row) => row[0] === userId)) {
+        availableReports.push(tab); // Add the tab name if userId is found in that tab
       }
     }
 
     if (availableReports.length > 0) {
-      return new Response(JSON.stringify({ availableReports }), { status: 200 });
+      return new Response(JSON.stringify({ availableReports }), {
+        status: 200,
+      });
     } else {
       return new Response("No reports found for this user", { status: 404 });
     }

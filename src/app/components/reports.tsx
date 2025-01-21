@@ -3,12 +3,13 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import axios from "axios";
+import Link from "next/link";
 
 const Reports = () => {
   const searchParams = useSearchParams();
   const userId = searchParams?.get("userId"); // Get userId from URL query parameters
 
-  const [availableReports, setAvailableReports] = useState<string[] | null>(
+  const [availableReports, setAvailableReports] = useState<any>(
     null
   );
   const [loading, setLoading] = useState<boolean>(true);
@@ -29,6 +30,13 @@ const Reports = () => {
       logo: "https://banner2.cleanpng.com/20181129/bpv/kisspng-computer-icons-clip-art-sql-server-reporting-servi-bo-co-cskh-1713916901306.webp",
       description:"abc main check"
     },
+    {
+      reportname: "Main",
+      path: "resume_report",
+      tab: "mains",
+      logo: "https://banner2.cleanpng.com/20181129/bpv/kisspng-computer-icons-clip-art-sql-server-reporting-servi-bo-co-cskh-1713916901306.webp",
+      description:"abc main check"
+    },
   ];
 
   useEffect(() => {
@@ -37,7 +45,9 @@ const Reports = () => {
     const fetchReports = async () => {
       try {
         const response = await axios.get(`/api/gsheet?userId=${userId}`);
-        setAvailableReports(response.data.availableReports);
+        const final_reports=reports.filter(report => response.data.availableReports.includes(report.tab))
+        setAvailableReports(final_reports);
+        console.log(final_reports);
         setLoading(false);
       } catch (err) {
         setError("Error fetching available reports");
@@ -50,7 +60,7 @@ const Reports = () => {
   }, [userId]);
 
   if (loading)
-    return <div className="text-center text-xl text-[#307fec]">Loading...</div>;
+    return <div className="text-center text-xl text-[#307fec]">Loading</div>;
   if (error)
     return <div className="text-center text-xl text-red-500">{error}</div>;
 
@@ -75,7 +85,7 @@ const Reports = () => {
               >
                 <div className="flex justify-between items-center mb-5">
                   <div className="text-2xl font-semibold text-[#307fec] hover:text-white transition-colors duration-300">
-                    {report}
+                    {report.reportname}
                   </div>
                   <img
                     src={`https://banner2.cleanpng.com/20181129/bpv/kisspng-computer-icons-clip-art-sql-server-reporting-servi-bo-co-cskh-1713916901306.webp`}
@@ -84,11 +94,10 @@ const Reports = () => {
                   />
                 </div>
                 <p className="text-[#e5e7eb] text-sm mb-4">
-                  View detailed insights and analysis for the selected report.
-                  Get a deeper look into performance metrics and trends.
+                 {report.description}
                 </p>
                 <button className="px-4 py-2 rounded-full text-white bg-[#307fec] hover:bg-[#1e77d0] transition-colors duration-300">
-                  View Report
+                  <Link href={report.path}>View Report</Link>
                 </button>
               </div>
             ))}
