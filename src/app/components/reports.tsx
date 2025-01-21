@@ -74,7 +74,7 @@ const Reports = () => {
     return <div className="text-center text-xl text-red-500">{error}</div>;
 
   return (
-    <div className="bg-[#307fec] flex flex-col justify-start items-center py-10 px-4">
+    <div className="bg-[#307fec] flex flex-col justify-start items-center pt-10 pb-4 px-4">
       {/* Header Section */}
       <div className="w-full bg-white rounded-xl shadow-2xl text-center p-8">
         {/* Placeholder for Background Image */}
