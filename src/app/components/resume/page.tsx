@@ -67,26 +67,26 @@ const ResumeAuditReport = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           {/* Resume Score Bar Chart */}
           <div className="bg-[#1c2533] flex items-center justify-between p-6 rounded-lg shadow-lg hover:bg-[#307fec] hover:cursor-pointer transition-all">
-            <h2 className="text-2xl font-semibold text-[#e5e7eb]">
+            <h2 className="text-2xl font-semibold text-white">
               Resume Score
             </h2>
             {/* <Bar data={barChartData} options={{ responsive: true }} /> */}
 
-            <span className={`font-bold border p-1 px-3 rounded `}>
-              {data["Resume Score"]}
+            <span className={`font-bold border p-1 px-3 rounded text-white`}>
+              {data["Resume Score"]}/10
             </span>
           </div>
 
           {/* Resume Ready Pie Chart */}
           <div className="bg-[#1c2533] flex items-center justify-between p-6 rounded-lg shadow-lg hover:bg-[#307fec] hover:cursor-pointer transition-all">
             <h2
-              className={`text-2xl font-semibold ${
+              className={`text-base font-semibold ${
                 data["Resume Ready?"] === "Yes"
                   ? "text-green-400 border-green-400"
                   : "text-red-400 border-red-400"
               }`}
             >
-              Is Resume Ready?
+             Is your resume fit for shortlisting?
             </h2>
             {/* <Pie data={pieChartData} options={{ responsive: true }} /> */}
             <span

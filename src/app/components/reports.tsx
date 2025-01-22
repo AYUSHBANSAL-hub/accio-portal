@@ -11,8 +11,12 @@ const Reports = () => {
   const userIdFromParams = searchParams?.get("userId"); // Get userId from URL query parameters
 
   const [availableReports, setAvailableReports] = useState<any>(null);
-  const { stateAvailableReports, setStateAvailableReports, setUserId, userId: storedUserId } =
-    useReportStore();
+  const {
+    stateAvailableReports,
+    setStateAvailableReports,
+    setUserId,
+    userId: storedUserId,
+  } = useReportStore();
 
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -20,25 +24,40 @@ const Reports = () => {
   // Predefined report data
   const reports = [
     {
-      reportname: "Resume Audit",
+      reportName: "Resume Audit",
       path: "resume",
       tab: "Resume_Audit",
       logo: "https://banner2.cleanpng.com/20181129/bpv/kisspng-computer-icons-clip-art-sql-server-reporting-servi-bo-co-cskh-1713916901306.webp",
-      description: "Detailed analysis of resume.",
+      description:
+        "A detailed evaluation of your resume, highlighting strengths and areas for improvement to enhance your chances in resume shortlisting.",
+      primaryColor: "#307fec", // Main theme color
+      secondaryColor: "#1c2533", // Background or supporting color
+      textColor: "#ffffff", // Text color for readability
+      updateFrequency: "15th of every month", // Defines when this report is refreshed
     },
     {
-      reportname: "Progress Report",
+      reportName: "User Information",
       path: "progress",
       tab: "main",
-      logo: "https://banner2.cleanpng.com/20181129/bpv/kisspng-computer-icons-clip-art-sql-server-reporting-servi-bo-co-cskh-1713916901306.webp",
-      description: "Comprehensive overview of the main data.",
+      logo: "userlogo.png",
+      description:
+        "A comprehensive analysis of your learning progress, covering completed tasks, performance metrics, and areas for improvement.",
+      primaryColor: "#28a745",
+      secondaryColor: "#1e3a3a",
+      textColor: "#ffffff",
+      updateFrequency: "Every Monday", // Weekly updates
     },
     {
-      reportname: "AccioMatrix Submissions",
+      reportName: "AccioMatrix Submissions",
       path: "acciomatrix_Submission",
       tab: "AccioMatrix_Submission",
-      logo: "https://banner2.cleanpng.com/20181129/bpv/kisspng-computer-icons-clip-art-sql-server-reporting-servi-bo-co-cskh-1713916901306.webp",
-      description: "Performance insights and evaluations.",
+      logo: "AccioMatrix.png",
+      description:
+        "Detailed insights into your submissions on AccioMatrix, providing feedback and scores to help improve problem-solving skills.",
+      primaryColor: "#f39c12",
+      secondaryColor: "#2b2f35",
+      textColor: "#ffffff",
+      updateFrequency: "Every Friday", // Bi-weekly or weekly updates
     },
   ];
 
@@ -57,7 +76,12 @@ const Reports = () => {
       setUserId(userIdFromParams);
       localStorage.setItem("userId", userIdFromParams);
     }
-  }, [setStateAvailableReports, stateAvailableReports, setUserId, userIdFromParams]);
+  }, [
+    setStateAvailableReports,
+    stateAvailableReports,
+    setUserId,
+    userIdFromParams,
+  ]);
 
   /**
    * Handle userId changes or API fetching
@@ -93,7 +117,10 @@ const Reports = () => {
       setError(null);
       const response = await axios.get(`/api/gsheet?userId=${userId}`);
       setStateAvailableReports(response.data);
-      localStorage.setItem("stateAvailableReports", JSON.stringify(response.data));
+      localStorage.setItem(
+        "stateAvailableReports",
+        JSON.stringify(response.data)
+      );
       populateReportsFromState(response.data);
     } catch (err) {
       setError("Error fetching available reports.");
@@ -114,13 +141,13 @@ const Reports = () => {
   };
 
   return (
-    <div className="bg-[#307fec] flex flex-col justify-start items-center pt-10 pb-4 px-4">
+    <div className="bg-[#307fec] flex flex-col justify-start items-center pt-6 pb-4 px-4">
       <div className="w-full bg-white rounded-xl shadow-2xl text-center p-8">
         {/* Header Section */}
         <div className="relative">
           <div className=" mx-auto flex flex-col md:flex-row items-center overflow-hidden">
             {/* Left Section: Header Content */}
-            <div className="relative z-10 p-8 flex-1">
+            <div className="relative z-10 p-3 flex-1">
               <img
                 src="https://acciojob.com/src/Navbar/logo.svg"
                 alt="AccioJob Logo"
@@ -140,16 +167,13 @@ const Reports = () => {
 
             {/* Right Section: Image */}
             <div className="flex-1">
-              <img
-                src="hero.png"
-                className="w-full h-auto object-cover"
-              />
+              <img src="hero.png" className="w-full h-auto object-cover" />
             </div>
           </div>
         </div>
 
         {/* Reports Section */}
-        <div className="w-full bg-white p-8">
+        <div className="w-full bg-white p-4 pt-0">
           <h2 className="text-3xl font-semibold text-black text-center mb-6">
             Available Reports
           </h2>
@@ -174,23 +198,43 @@ const Reports = () => {
                 availableReports.map((report: any, index: any) => (
                   <div
                     key={index}
-                    className="bg-[#1c2533] p-6 rounded-xl shadow-2xl hover:scale-105 transform transition-transform duration-300 ease-in-out"
+                    className="p-6 rounded-xl shadow-2xl hover:scale-105 transform transition-transform duration-300 ease-in-out"
+                    style={{ backgroundColor: report.secondaryColor }} // Dynamically applying background color
                   >
                     <div className="flex justify-between items-center mb-5">
-                      <div className="text-2xl font-semibold text-white hover:text-gray-300 transition-colors duration-300">
-                        {report.reportname}
+                      <div
+                        className="text-2xl font-semibold hover:text-gray-300 transition-colors duration-300"
+                        style={{ color: report.textColor }} // Applying dynamic text color
+                      >
+                        {report.reportName}
                       </div>
                       <img
                         src={report.logo}
-                        alt={`${report.reportname} Logo`}
-                        className="w-12 h-12 rounded-full border-2 border-[#307fec] p-2"
+                        alt={`${report.reportName} Logo`}
+                        className="w-12 h-12 rounded-full border-2 p-2"
+                        style={{ borderColor: report.primaryColor }} // Dynamically applying border color
                       />
                     </div>
+
                     <p className="text-gray-300 text-sm mb-4">
                       {report.description}
                     </p>
+
+                    <div className="text-xs text-gray-400 mb-4">
+                      <span className="font-semibold text-gray-300">
+                        Updated:
+                      </span>{" "}
+                      {report.updateFrequency}
+                    </div>
+
                     <Link href={`/components/${report.path}`}>
-                      <button className="w-full px-4 py-2 rounded text-white bg-[#307fec] hover:bg-[#1e77d0] transition-colors duration-300">
+                      <button
+                        className="w-full px-4 py-2 rounded font-semibold text-white transition-colors duration-300"
+                        style={{
+                          backgroundColor: report.primaryColor,
+                          hover: { backgroundColor: "#1e77d0" },
+                        }} // Applying dynamic button color
+                      >
                         View Report
                       </button>
                     </Link>
@@ -206,7 +250,7 @@ const Reports = () => {
         </div>
       </div>
       {/* How It Works Section */}
-      <div className="w-full mt-10 bg-white rounded-xl p-8">
+      <div className="w-full mt-6 bg-white rounded-xl p-8">
         <h2 className="text-3xl font-semibold text-black text-center">
           How It Works
         </h2>
@@ -254,6 +298,26 @@ const Reports = () => {
             </p>
           </div>
         </div>
+      </div>
+
+      {/* Need Assistance section */}
+      <div className="w-full bg-[#f8f9fa] mb-10 py-6 px-10 rounded-lg shadow-md mt-6 flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-semibold text-[#2b2f35]">
+            Need Help or Assistance?
+          </h2>
+          <p className="text-gray-600 text-base mt-2">
+            If you need any kind of help, reach out to us on the <span className="font-semibold">AccioJob Support Section</span> to get quick resolutions and expert guidance.
+          </p>
+        </div>
+        <a
+          href="https://course.acciojob.com/support"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block bg-[#307fec] text-white px-10 font-bold py-4 rounded-lg text-base hover:bg-[#1e77d0] transition-colors duration-300"
+        >
+          Go to Support
+        </a>
       </div>
 
       {/* Footer Section */}
