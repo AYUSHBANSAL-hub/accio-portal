@@ -65,8 +65,8 @@ const AccioMatrixSubmissions = () => {
               className="px-5 py-2 rounded-xl m-auto"
               src="https://acciomatrix.com/_next/static/media/full_logo.882fb685.svg"
             />
-            <h1 className="text-5xl font-extrabold mb-4">Assessment Reports</h1>
-            <p className="text-xl mb-6">
+            <h1 className="text-5xl font-extrabold mb-4 text-white">Assessment Reports</h1>
+            <p className="text-xl mb-6 text-white">
               Discover insights, track progress, and explore detailed reports of
               your assessments.
             </p>
