@@ -24,6 +24,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <title>AccioJob Reports Portal</title>
+        <meta
+          name="description"
+          content="This portal is where you can check all reports for you"
+        />
+        <link rel="icon" type="image/png" href="/accioLogo.png" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
