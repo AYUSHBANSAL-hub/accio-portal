@@ -174,7 +174,7 @@ const Reports = () => {
           >
             {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
           </button>
-          <div className=" mx-auto flex flex-col md:flex-row items-center overflow-hidden">
+          <div className="mx-auto flex flex-col items-center overflow-hidden pt-8 md:pt-0 md:flex-row">
             {/* Left Section: Header Content */}
             <div className="relative z-10 p-3 flex-1">
               <img
@@ -352,7 +352,7 @@ const Reports = () => {
       {/* Need Assistance section */}
       <div className={`w-full  mb-10 py-6 px-10 rounded-lg shadow-md mt-6 flex items-center justify-between ${
                   darkMode ? "bg-gray-900" : "bg-[#f8f9fa]"
-                }`}>
+                } md:no-wrap flex-wrap`}>
         <div>
           <h2 className={`text-2xl font-semibold  ${
                   darkMode ? "text-gray-200" : "text-[#2b2f35]"

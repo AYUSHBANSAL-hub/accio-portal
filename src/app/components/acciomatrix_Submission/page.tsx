@@ -65,7 +65,9 @@ const AccioMatrixSubmissions = () => {
               className="px-5 py-2 rounded-xl m-auto"
               src="https://acciomatrix.com/_next/static/media/full_logo.882fb685.svg"
             />
-            <h1 className="text-5xl font-extrabold mb-4 text-white">Assessment Reports</h1>
+            <h1 className="text-5xl font-extrabold mb-4 text-white">
+              Assessment Reports
+            </h1>
             <p className="text-xl mb-6 text-white">
               Discover insights, track progress, and explore detailed reports of
               your assessments.
@@ -118,72 +120,137 @@ const AccioMatrixSubmissions = () => {
         </h2>
 
         {assessments.length > 0 ? (
-          <table className="table-auto w-full border-collapse border border-gray-200">
-            <thead className="bg-[#1c2533] text-white">
-              <tr>
-                <th className="px-4 py-2 text-left">S No.</th>
-                <th className="px-4 py-2 text-left">Test Name</th>
-                <th className="px-4 py-2 text-left">Date</th>
-                <th className="px-4 py-2 text-left">Score</th>
-                <th className="px-4 py-2 text-left">Trust Score</th>
-                <th className="px-4 py-2 text-left">Feedback</th>
-                <th className="px-4 py-2 text-center">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {assessments.map((assessment: any, index: number) => (
-                <tr
-                  key={index}
-                  className={`${
-                    index % 2 === 0 ? "bg-gray-100" : "bg-white"
-                  } hover:bg-gray-200 text-black`}
-                >
-                  <td className="border border-[#ef6821] px-4 py-2">
-                    {index + 1}.
-                  </td>
-                  <td className="border border-[#ef6821] px-4 py-2">
-                    {assessment.test_name}
-                  </td>
-                  <td className="border border-[#ef6821] px-4 py-2">
-                    {new Date(assessment.test_created_at).toLocaleDateString()}
-                  </td>
-                  {assessment.score ? (
-                    <td className="border border-[#ef6821] px-4 py-2 font-bold text-center align-middle ">
-                      {assessment.score}%
-                    </td>
-                  ) : (
-                    <td className="border border-[#ef6821] px-4 py-2"></td>
-                  )}
-                  {assessment.trust_score ? (
-                    <td className="border border-[#ef6821] px-4 py-2 text-center align-middle font-bold">
-                      {parseFloat(assessment.trust_score).toFixed(2) * 100}%
-                    </td>
-                  ) : (
-                    <td className="border border-[#ef6821] px-4 py-2"></td>
-                  )}
-                  {assessment.test_feedback ? (
-                    <td className="border border-[#ef6821] px-4 py-2 text-sm text-gray-600">
-                      {assessment.test_feedback.slice(0, 200)}...
-                    </td>
-                  ) : (
-                    <td className="border border-[#ef6821] px-4 py-2"></td>
-                  )}
-                  <td className="border border-[#ef6821] px-4 py-2 text-center">
-                    {assessment.report_link && (
-                      <a
-                        href={assessment.report_link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-block px-4 py-2 font-semibold text-white bg-[#307fec] hover:bg-[#1e77d0] rounded transition-colors duration-300"
-                      >
-                        View Report
-                      </a>
-                    )}
-                  </td>
+          <div>
+            {/* Table view */}
+            <table className="hidden md:block overflow-x-auto table-auto w-full border-collapse border border-gray-200">
+              <thead className="bg-[#1c2533] text-white">
+                <tr>
+                  <th className="px-4 py-2 text-left">S No.</th>
+                  <th className="px-4 py-2 text-left">Test Name</th>
+                  <th className="px-4 py-2 text-left">Date</th>
+                  <th className="px-4 py-2 text-left">Score</th>
+                  <th className="px-4 py-2 text-left">Trust Score</th>
+                  <th className="px-4 py-2 text-left">Feedback</th>
+                  <th className="px-4 py-2 text-center">Action</th>
                 </tr>
+              </thead>
+              <tbody>
+                {assessments.map((assessment: any, index: number) => (
+                  <tr
+                    key={index}
+                    className={`${
+                      index % 2 === 0 ? "bg-gray-100" : "bg-white"
+                    } hover:bg-gray-200 text-black`}
+                  >
+                    <td className="border border-[#ef6821] px-4 py-2">
+                      {index + 1}.
+                    </td>
+                    <td className="border border-[#ef6821] px-4 py-2">
+                      {assessment.test_name}
+                    </td>
+                    <td className="border border-[#ef6821] px-4 py-2">
+                      {new Date(
+                        assessment.test_created_at
+                      ).toLocaleDateString()}
+                    </td>
+                    {assessment.score ? (
+                      <td className="border border-[#ef6821] px-4 py-2 font-bold text-center align-middle ">
+                        {assessment.score}%
+                      </td>
+                    ) : (
+                      <td className="border border-[#ef6821] px-4 py-2"></td>
+                    )}
+                    {assessment.trust_score ? (
+                      <td className="border border-[#ef6821] px-4 py-2 text-center align-middle font-bold">
+                        {parseFloat(assessment.trust_score).toFixed(2) * 100}%
+                      </td>
+                    ) : (
+                      <td className="border border-[#ef6821] px-4 py-2"></td>
+                    )}
+                    {assessment.test_feedback ? (
+                      <td className="border border-[#ef6821] px-4 py-2 text-sm text-gray-600">
+                        {assessment.test_feedback.slice(0, 200)}...
+                      </td>
+                    ) : (
+                      <td className="border border-[#ef6821] px-4 py-2"></td>
+                    )}
+                    <td className="border border-[#ef6821] px-4 py-2 text-center">
+                      {assessment.report_link && (
+                        <a
+                          href={assessment.report_link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-block px-4 py-2 font-semibold text-white bg-[#307fec] hover:bg-[#1e77d0] rounded transition-colors duration-300"
+                        >
+                          View Report
+                        </a>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {/* Card view */}
+            <div className="block md:hidden">
+              {assessments.map((assessment: any, index: number) => (
+                <div
+                key={index}
+                className="border border-[#ef6821] rounded-2xl p-6 mb-6 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white"
+              >
+                {/* Header */}
+                {/* <div className="flex justify-between items-center mb-4"> */}
+                  <h2 className="text-lg/5 font-semibold text-center pb-2 text-[#307fec]">
+                    {assessment.test_name}
+                  </h2>
+                  <p className="text-sm text-gray-500">
+                  <span className="font-semibold text-gray-700">Submitted On:</span> {new Date(assessment.test_created_at).toLocaleDateString()}
+                  </p>
+                {/* </div> */}
+              
+                {/* Body */}
+                <div>
+                  <p className="text-sm">
+                    <span className="font-semibold text-gray-700">Score:</span>{" "}
+                    <span className={`font-medium ${assessment.score ? "text-green-600" : "text-red-500"}`}>
+                      {assessment.score ? `${assessment.score}%` : "N/A"}
+                    </span>
+                  </p>
+                  <p className="text-sm">
+                    <span className="font-semibold text-gray-700">Trust Score:</span>{" "}
+                    <span className={`font-medium ${assessment.trust_score ? "text-green-600" : "text-red-500"}`}>
+                      {assessment.trust_score
+                        ? `${(parseFloat(assessment.trust_score) * 100).toFixed(2)}%`
+                        : "N/A"}
+                    </span>
+                  </p>
+                  <p className="text-sm">
+                    <span className="font-semibold text-gray-700">Feedback:</span>{" "}
+                    <span className="text-gray-600">
+                      {assessment.test_feedback
+                        ? `${assessment.test_feedback.slice(0, 200)}...`
+                        : "No feedback available"}
+                    </span>
+                  </p>
+                </div>
+              
+                {/* Action */}
+                {assessment.report_link && (
+                  <div className="mt-4 text-center">
+                    <a
+                      href={assessment.report_link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block px-4 py-2 font-semibold text-white bg-[#307fec] hover:bg-[#1e77d0] rounded transition-colors duration-300"
+                    >
+                      View Report
+                    </a>
+                  </div>
+                )}
+              </div>
+              
               ))}
-            </tbody>
-          </table>
+            </div>
+          </div>
         ) : (
           <div className="text-center text-gray-500 text-lg">
             No assessments found.
