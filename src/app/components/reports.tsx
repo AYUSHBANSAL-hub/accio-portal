@@ -21,6 +21,17 @@ const Reports = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Dark Mode setup
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    // Check localStorage for dark mode preference
+    return localStorage.getItem("darkMode") === "true";
+  });
+
+  useEffect(() => {
+    // Store dark mode preference
+    localStorage.setItem("darkMode", darkMode.toString());
+  }, [darkMode]);
+
   // Predefined report data
   const reports = [
     {
@@ -141,25 +152,55 @@ const Reports = () => {
   };
 
   return (
-    <div className="bg-[#307fec] flex flex-col justify-start items-center pt-6 pb-4 px-4">
-      <div className="w-full bg-white rounded-xl shadow-2xl text-center p-8">
+    <div
+      className={`${
+        darkMode ? "bg-gray-200 text-white" : "bg-[#307fec] text-black"
+      } flex flex-col justify-start items-center pt-6 pb-4 px-4`}
+    >
+      <div
+        className={`${
+          darkMode ? "bg-gray-900 text-white" : "bg-white text-black"
+        }w-full rounded-xl shadow-2xl text-center p-8`}
+      >
         {/* Header Section */}
         <div className="relative">
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            className="absolute right-0 p-2 text-sm font-semibold rounded-md transition-all"
+            style={{
+              backgroundColor: darkMode ? "#ffffff" : "#333",
+              color: darkMode ? "#333" : "#ffffff",
+            }}
+          >
+            {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
+          </button>
           <div className=" mx-auto flex flex-col md:flex-row items-center overflow-hidden">
             {/* Left Section: Header Content */}
             <div className="relative z-10 p-3 flex-1">
               <img
                 src="https://acciojob.com/src/Navbar/logo.svg"
                 alt="AccioJob Logo"
-                className="w-auto h-20 mb-6 mx-auto"
+                className="w-auto h-20 mb-6 mx-auto bg-white rounded-3xl px-3 py-1"
               />
-              <h1 className="text-4xl font-bold text-black">
+              <h1
+                className={`text-4xl font-bold ${
+                  darkMode ? "text-white" : "text-black"
+                }`}
+              >
                 Welcome to AccioJob Reports!
               </h1>
-              <p className="text-lg text-gray-600 mt-4">
+              <p
+                className={`text-lg ${
+                  darkMode ? "text-gray-200" : "text-gray-900"
+                } mt-4 font-semibold`}
+              >
                 Unlock personalized insights to boost your career.
               </p>
-              <p className="text-sm text-gray-500 mt-2">
+              <p
+                className={`text-base ${
+                  darkMode ? "text-gray-400" : "text-gray-800"
+                } mt-2`}
+              >
                 Analyze your data and get detailed reports tailored to your
                 needs.
               </p>
@@ -173,8 +214,12 @@ const Reports = () => {
         </div>
 
         {/* Reports Section */}
-        <div className="w-full bg-white p-4 pt-0">
-          <h2 className="text-3xl font-semibold text-black text-center mb-6">
+        <div className={`w-full p-4 pt-0`}>
+          <h2
+            className={`text-3xl ${
+              darkMode ? "text-gray-200" : "text-black"
+            } font-semibold text-center mb-6`}
+          >
             Available Reports
           </h2>
           {error ? (
@@ -250,9 +295,13 @@ const Reports = () => {
         </div>
       </div>
       {/* How It Works Section */}
-      <div className="w-full mt-6 bg-white rounded-xl p-8">
-        <h2 className="text-3xl font-semibold text-black text-center">
-          How It Works
+      <div className={`w-full mt-6 rounded-xl p-8 ${
+                  darkMode ? "bg-gray-900" : "bg-white"
+                }`}>
+        <h2 className={`text-3xl font-semibold  text-center ${
+                  darkMode ? "text-gray-200" : "text-[#2b2f35]"
+                }`}>
+          How It Works?
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 text-center py-5 px-4">
           {/* Step 1: Analyze */}
@@ -301,13 +350,21 @@ const Reports = () => {
       </div>
 
       {/* Need Assistance section */}
-      <div className="w-full bg-[#f8f9fa] mb-10 py-6 px-10 rounded-lg shadow-md mt-6 flex items-center justify-between">
+      <div className={`w-full  mb-10 py-6 px-10 rounded-lg shadow-md mt-6 flex items-center justify-between ${
+                  darkMode ? "bg-gray-900" : "bg-[#f8f9fa]"
+                }`}>
         <div>
-          <h2 className="text-2xl font-semibold text-[#2b2f35]">
+          <h2 className={`text-2xl font-semibold  ${
+                  darkMode ? "text-gray-200" : "text-[#2b2f35]"
+                }`}>
             Need Help or Assistance?
           </h2>
-          <p className="text-gray-600 text-base mt-2">
-            If you need any kind of help, reach out to us on the <span className="font-semibold">AccioJob Support Section</span> to get quick resolutions and expert guidance.
+          <p className={` text-base mt-2 ${
+                  darkMode ? "text-gray-200" : "text-gray-600"
+                }`}>
+            If you need any kind of help, reach out to us on the{" "}
+            <span className="font-semibold">AccioJob Support Section</span> to
+            get quick resolutions and expert guidance.
           </p>
         </div>
         <a
