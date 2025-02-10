@@ -35,7 +35,7 @@ const Reports = () => {
   // Predefined report data
   const reports = [
     {
-      reportName: "Resume Ausdit",
+      reportName: "Resume Audit",
       path: "resume",
       tab: "Resume_Audit",
       logo: "https://banner2.cleanpng.com/20181129/bpv/kisspng-computer-icons-clip-art-sql-server-reporting-servi-bo-co-cskh-1713916901306.webp",

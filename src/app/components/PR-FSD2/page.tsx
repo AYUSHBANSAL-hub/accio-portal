@@ -72,8 +72,13 @@ const LearnerDashboard = () => {
       webdev: mockData?.webdev_ques_60days,
       mcq: mockData?.mcq_ques_60days,
     };
+    const expectedtargets={
+      coding: 60,
+      webdev: 30,
+      mcq: 60,
+    };
 
-    return { total, last60Days };
+    return { total, last60Days,expectedtargets };
   };
 
   const progress = calculateProgress();
@@ -438,18 +443,18 @@ const LearnerDashboard = () => {
                   <div className="flex justify-between text-sm">
                     <span className="font-medium">Coding Questions</span>
                     <span className="text-blue-600">
-                      {progress.last60Days.coding} / {progress.total.coding}
+                      {progress.last60Days.coding} / {progress.expectedtargets.coding}
                     </span>
                   </div>
                   <Progress
                     value={
-                      (progress.last60Days.coding / progress.total.coding) * 100
+                      (progress.last60Days.coding / progress.expectedtargets.coding) * 100
                     }
                     className="h-3 bg-blue-100"
                   />
                   <p className="text-xs text-gray-500">
                     {(
-                      (progress.last60Days.coding / progress.total.coding) *
+                      (progress.last60Days.coding / progress.expectedtargets.coding) *
                       100
                     ).toFixed(1)}
                     % completion rate
@@ -460,18 +465,18 @@ const LearnerDashboard = () => {
                   <div className="flex justify-between text-sm">
                     <span className="font-medium">Web Development</span>
                     <span className="text-green-600">
-                      {progress.last60Days.webdev} / {progress.total.webdev}
+                      {progress.last60Days.webdev} / {progress.expectedtargets.webdev}
                     </span>
                   </div>
                   <Progress
                     value={
-                      (progress.last60Days.webdev / progress.total.webdev) * 100
+                      (progress.last60Days.webdev / progress.expectedtargets.webdev) * 100
                     }
                     className="h-3 bg-green-100"
                   />
                   <p className="text-xs text-gray-500">
                     {(
-                      (progress.last60Days.webdev / progress.total.webdev) *
+                      (progress.last60Days.webdev / progress.expectedtargets.webdev) *
                       100
                     ).toFixed(1)}
                     % completion rate
@@ -482,16 +487,16 @@ const LearnerDashboard = () => {
                   <div className="flex justify-between text-sm">
                     <span className="font-medium">MCQ Questions</span>
                     <span className="text-purple-600">
-                      {progress.last60Days.mcq} / {progress.total.mcq}
+                      {progress.last60Days.mcq} / {progress.expectedtargets.mcq}
                     </span>
                   </div>
                   <Progress
-                    value={(progress.last60Days.mcq / progress.total.mcq) * 100}
+                    value={(progress.last60Days.mcq / progress.expectedtargets.mcq) * 100}
                     className="h-3 bg-purple-100"
                   />
                   <p className="text-xs text-gray-500">
                     {(
-                      (progress.last60Days.mcq / progress.total.mcq) *
+                      (progress.last60Days.mcq / progress.expectedtargets.mcq) *
                       100
                     ).toFixed(1)}
                     % completion rate
