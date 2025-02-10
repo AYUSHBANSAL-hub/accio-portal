@@ -35,7 +35,7 @@ const Reports = () => {
   // Predefined report data
   const reports = [
     {
-      reportName: "Resume Audit",
+      reportName: "Resume Ausdit",
       path: "resume",
       tab: "Resume_Audit",
       logo: "https://banner2.cleanpng.com/20181129/bpv/kisspng-computer-icons-clip-art-sql-server-reporting-servi-bo-co-cskh-1713916901306.webp",
@@ -70,6 +70,18 @@ const Reports = () => {
       textColor: "#ffffff",
       updateFrequency: "Every Friday", // Bi-weekly or weekly updates
     },
+    {
+      reportName: "Placement Readiness Report",
+      path: "PR-FSD2",
+      tab: "Pr_Report",
+      logo: "userlogo.png",
+      description:
+        "This report shows your progress and your performance in respect to the placements and how much you have worked upon improving yourself.",
+      primaryColor: "#f39c12",
+      secondaryColor: "#2b2f35",
+      textColor: "#ffffff",
+      updateFrequency: "15th of every month", // Bi-weekly or weekly updates
+    }
   ];
 
   /**
@@ -78,46 +90,46 @@ const Reports = () => {
   useEffect(() => {
     const storedReports = localStorage.getItem("stateAvailableReports");
     const storedUserId = localStorage.getItem("userId");
-
+  
     if (!stateAvailableReports && storedReports) {
+      console.log("Using stored reports from localStorage:", storedReports);
       setStateAvailableReports(JSON.parse(storedReports));
     }
-
+  
     if (!storedUserId && userIdFromParams) {
+      console.log("Setting userId from URL params:", userIdFromParams);
       setUserId(userIdFromParams);
       localStorage.setItem("userId", userIdFromParams);
     }
-  }, [
-    setStateAvailableReports,
-    stateAvailableReports,
-    setUserId,
-    userIdFromParams,
-  ]);
-
+  }, [setStateAvailableReports, stateAvailableReports, setUserId, userIdFromParams]);
+  
   /**
    * Handle userId changes or API fetching
    */
   useEffect(() => {
+    console.log("Running useEffect for fetching reports");
+  
     if (userIdFromParams && userIdFromParams !== storedUserId) {
-      // Update the userId in state and localStorage
+      console.log("Updating userId in state and localStorage:", userIdFromParams);
       setUserId(userIdFromParams);
       localStorage.setItem("userId", userIdFromParams);
-
+  
       // Clear previous state
       setStateAvailableReports(null);
       setAvailableReports(null);
-
+  
       // Fetch new data
       fetchReports(userIdFromParams);
     } else if (!stateAvailableReports && userIdFromParams) {
-      // Fetch data if stateAvailableReports is null
+      console.log("Fetching reports because stateAvailableReports is empty");
       fetchReports(userIdFromParams);
     } else if (stateAvailableReports) {
-      // Use available state data to populate reports
+      console.log("Populating reports from stateAvailableReports");
       populateReportsFromState(stateAvailableReports);
       setLoading(false);
     }
   }, [userIdFromParams, stateAvailableReports, storedUserId, setUserId]);
+  
 
   /**
    * Fetch reports for the given userId
@@ -127,12 +139,17 @@ const Reports = () => {
       setLoading(true);
       setError(null);
       const response = await axios.get(`/api/gsheet?userId=${userId}`);
-      setStateAvailableReports(response.data);
-      localStorage.setItem(
-        "stateAvailableReports",
-        JSON.stringify(response.data)
-      );
-      populateReportsFromState(response.data);
+      
+      if (response.data) {
+        console.log("Fetched Reports:", response.data); // Debugging log
+  
+        setStateAvailableReports(response.data);
+        localStorage.setItem("stateAvailableReports", JSON.stringify(response.data));
+  
+        populateReportsFromState(response.data);
+      } else {
+        setError("No report data available.");
+      }
     } catch (err) {
       setError("Error fetching available reports.");
     } finally {
@@ -144,12 +161,19 @@ const Reports = () => {
    * Populate available reports based on API response
    */
   const populateReportsFromState = (data: any) => {
-    const availableReportTabs = Object.keys(data);
-    const finalReports = reports.filter((report) =>
-      availableReportTabs.includes(report.tab)
-    );
+    const availableReportTabs = Object.keys(data).map((key) => key.toLowerCase()); // Convert API response keys to lowercase
+    console.log("API Response Keys:", availableReportTabs);
+  
+    const finalReports = reports.filter((report) => {
+      console.log(`Checking Report: ${report.reportName} | Tab: ${report.tab.toLowerCase()}`);
+      return availableReportTabs.includes(report.tab.toLowerCase());
+    });
+  
+    console.log("Final Reports to Display:", finalReports);
     setAvailableReports(finalReports);
   };
+  
+  
 
   return (
     <div
