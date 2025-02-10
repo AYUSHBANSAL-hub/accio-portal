@@ -72,13 +72,13 @@ const LearnerDashboard = () => {
       webdev: mockData?.webdev_ques_60days,
       mcq: mockData?.mcq_ques_60days,
     };
-    const expectedtargets={
+    const expectedtargets = {
       coding: 60,
       webdev: 30,
       mcq: 60,
     };
 
-    return { total, last60Days,expectedtargets };
+    return { total, last60Days, expectedtargets };
   };
 
   const progress = calculateProgress();
@@ -105,7 +105,7 @@ const LearnerDashboard = () => {
       score: mockData?.spring2_mock_score,
       date: mockData?.spring2_mock_date,
     },
-    
+
     {
       name: "Java Mid",
       score: mockData?.java_mid_mock_score,
@@ -433,9 +433,7 @@ const LearnerDashboard = () => {
           <Card>
             <CardHeader>
               <CardTitle>Learning Progress Details</CardTitle>
-              <CardDescription>
-                Last 60 days vs Overall Progress
-              </CardDescription>
+              <CardDescription>Last 60 days vs Target</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
@@ -443,18 +441,22 @@ const LearnerDashboard = () => {
                   <div className="flex justify-between text-sm">
                     <span className="font-medium">Coding Questions</span>
                     <span className="text-blue-600">
-                      {progress.last60Days.coding} / {progress.expectedtargets.coding}
+                      {progress.last60Days.coding} /{" "}
+                      {progress.expectedtargets.coding}
                     </span>
                   </div>
                   <Progress
                     value={
-                      (progress.last60Days.coding / progress.expectedtargets.coding) * 100
+                      (progress.last60Days.coding /
+                        progress.expectedtargets.coding) *
+                      100
                     }
                     className="h-3 bg-blue-100"
                   />
                   <p className="text-xs text-gray-500">
                     {(
-                      (progress.last60Days.coding / progress.expectedtargets.coding) *
+                      (progress.last60Days.coding /
+                        progress.expectedtargets.coding) *
                       100
                     ).toFixed(1)}
                     % completion rate
@@ -465,18 +467,22 @@ const LearnerDashboard = () => {
                   <div className="flex justify-between text-sm">
                     <span className="font-medium">Web Development</span>
                     <span className="text-green-600">
-                      {progress.last60Days.webdev} / {progress.expectedtargets.webdev}
+                      {progress.last60Days.webdev} /{" "}
+                      {progress.expectedtargets.webdev}
                     </span>
                   </div>
                   <Progress
                     value={
-                      (progress.last60Days.webdev / progress.expectedtargets.webdev) * 100
+                      (progress.last60Days.webdev /
+                        progress.expectedtargets.webdev) *
+                      100
                     }
                     className="h-3 bg-green-100"
                   />
                   <p className="text-xs text-gray-500">
                     {(
-                      (progress.last60Days.webdev / progress.expectedtargets.webdev) *
+                      (progress.last60Days.webdev /
+                        progress.expectedtargets.webdev) *
                       100
                     ).toFixed(1)}
                     % completion rate
@@ -491,7 +497,10 @@ const LearnerDashboard = () => {
                     </span>
                   </div>
                   <Progress
-                    value={(progress.last60Days.mcq / progress.expectedtargets.mcq) * 100}
+                    value={
+                      (progress.last60Days.mcq / progress.expectedtargets.mcq) *
+                      100
+                    }
                     className="h-3 bg-purple-100"
                   />
                   <p className="text-xs text-gray-500">
@@ -511,14 +520,12 @@ const LearnerDashboard = () => {
           {/* Resume Status */}
           <Card>
             <CardHeader>
-              <CardTitle>Resume Status</CardTitle>
-              <CardDescription>
-                Latest feedback and improvements
-              </CardDescription>
+              <CardTitle className="text-2xl color-primary bg-blue-100 rounded px-2 py-1 text-blue-700">Latest Resume Status & feedback</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
+              <div>
+                <div className="flex pl-2 pb-5 items-center">
+                  <span className="pr-3 font-bold">Final Judgement: </span>
                   <Badge
                     variant="outline"
                     className={
@@ -527,58 +534,44 @@ const LearnerDashboard = () => {
                         : "bg-yellow-100 text-yellow-800"
                     }
                   >
-                    {mockData?.resume_ready === "Yes" ? "Ready" : "In Progress"}
+                    {mockData?.resume_ready === "Yes"
+                      ? "Ready"
+                      : "Needs Improvement"}
                   </Badge>
-                  <span className="text-sm text-gray-500">
-                    Last Updated: {mockData?.resume_mock_date}
-                  </span>
-                </div>
-
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <h4 className="font-semibold mb-2">Latest Mock Details</h4>
-                  <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <p className="text-sm text-gray-500">Mock Type</p>
-                      <p className="font-medium">
-                        {mockData?.resume_mock_type}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-500">Score</p>
-                      <p className="font-medium text-blue-600">
-                        {mockData?.resume_mock_score}/10
-                      </p>
-                    </div>
-                  </div>
                 </div>
 
                 <div className="space-y-4">
-                  <div>
-                    <h4 className="font-semibold mb-2">Feedback Summary</h4>
-                    <p className="text-sm text-gray-600 bg-gray-50 p-4 rounded-lg">
-                      {mockData?.resume_mock_feedback}
-                    </p>
-                  </div>
-
-                  <div>
-                    <h4 className="font-semibold mb-2">Detailed Feedback</h4>
-                    <div className="bg-gray-50 p-4 rounded-lg space-y-3">
-                      {mockData?.resume_feedback &&
-                        mockData?.resume_feedback
-                          .split(",")
-                          .map((feedback: any, index: number) => (
-                            <div key={index} className="flex items-start gap-2">
-                              <CheckCircle className="h-4 w-4 text-blue-600 mt-1" />
-                              <p className="text-sm text-gray-600">
-                                {feedback.trim()}
-                              </p>
-                            </div>
-                          ))}
+                  {mockData?.resume_mock_feedback && (
+                    <div>
+                      <h4 className="font-semibold mb-2">Feedback Summary</h4>
+                      <p className="text-sm text-gray-600 bg-gray-50 p-4 rounded-lg">
+                        {mockData?.resume_mock_feedback}
+                      </p>
                     </div>
-                  </div>
+                  )}
 
+                  {mockData?.resume_feedback && (
+                    <div>
+                      <h4 className="font-semibold mb-2">Detailed Feedback</h4>
+                      <div className="bg-gray-50 p-4 rounded-lg space-y-3">
+                        {mockData?.resume_feedback &&
+                          mockData?.resume_feedback
+                            .split(",")
+                            .map((feedback: any, index: number) => (
+                              <div
+                                key={index}
+                                className="flex items-start gap-2"
+                              >
+                                <CheckCircle className="h-4 w-4 text-blue-600 mt-1" />
+                                <p className="text-sm text-gray-600">
+                                  {feedback.trim()}
+                                </p>
+                              </div>
+                            ))}
+                      </div>
+                    </div>
+                  )}
                   <div>
-                    <h4 className="font-semibold mb-2">Resources</h4>
                     <div className="bg-blue-50 p-4 rounded-lg">
                       <div className="flex items-center gap-2 text-sm text-blue-600">
                         <FileText className="h-4 w-4" />
@@ -594,58 +587,16 @@ const LearnerDashboard = () => {
                     </div>
                   </div>
                 </div>
-
-                {/* PR and Project Section */}
-                <Card className="mt-6">
-                  <CardHeader>
-                    <CardTitle className="text-lg">
-                      Project Readiness Assessment
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                <div className="flex justify-between items-center p-3 mt-2 bg-gray-50 rounded-lg">
                         <div>
-                          <p className="font-medium">Final PR Type</p>
-                          <p className="text-sm text-gray-600">
+                          <p className="font-medium">Specialisation</p>
+                          <p className="text-xl font-bold text-gray-600">
                             {mockData?.final_pr_type}
                           </p>
                         </div>
-                        <Badge
-                          variant="outline"
-                          className={
-                            mockData?.user_pla_ready === "Yes"
-                              ? "bg-green-100 text-green-800"
-                              : "bg-yellow-100 text-yellow-800"
-                          }
-                        >
-                          {mockData?.user_pla_ready === "Yes"
-                            ? "PLA Ready"
-                            : "In Progress"}
-                        </Badge>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="p-3 bg-gray-50 rounded-lg">
-                          <p className="font-medium mb-1">
-                            Communication Skills
-                          </p>
-                          <p className="text-sm text-gray-600">
-                            {mockData?.communication_tag}
-                          </p>
-                        </div>
-                        <div className="p-3 bg-gray-50 rounded-lg">
-                          <p className="font-medium mb-1">Mock Status</p>
-                          <p className="text-sm text-gray-600">
-                            {mockData?.all_mocks_cleared === "Yes"
-                              ? "All Cleared"
-                              : "Pending"}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+             
               </div>
             </CardContent>
           </Card>
