@@ -91,6 +91,16 @@ const LearnerDashboard = () => {
       date: mockData?.hr_mock_date,
     },
     {
+      name: "Frontend Readiness",
+      score: mockData?.frontend_pla_mock_score,
+      date: mockData?.frontend_pla_mock_date,
+    },
+    {
+      name: "DSA Readiness",
+      score: mockData?.dsa_pla_mock_score,
+      date: mockData?.dsa_pla_mock_date,
+    },
+    {
       name: "Node",
       score: mockData?.node_mock_score,
       date: mockData?.node_mock_date,
@@ -125,16 +135,6 @@ const LearnerDashboard = () => {
       name: "MERN Full",
       score: mockData?.mern_full_mock_score,
       date: mockData?.mern_full_mock_date,
-    },
-    {
-      name: "Frontend Readiness",
-      score: mockData?.frontend_pla_mock_score,
-      date: mockData?.frontend_pla_mock_date,
-    },
-    {
-      name: "DSA Readiness",
-      score: mockData?.dsa_pla_mock_score,
-      date: mockData?.dsa_pla_mock_date,
     },
     {
       name: "Java Placement",
@@ -297,6 +297,24 @@ const LearnerDashboard = () => {
         </Card>
       </div>
 
+      {/* Actionables and next steps */}
+      {mockData?.Final_Feedback &&
+      <div className="grid grid-cols-1 gap-4">
+        <Card className="bg-blue-50">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-2xl font-bold text-blue-700">
+              Actionables & Next Steps
+            </CardTitle>
+            <TrendingUp className="h-4 w-4 text-blue-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-blue-700">
+              {mockData?.Final_Feedback}
+            </div>
+          </CardContent>
+        </Card>
+      </div>}
+
       {/* Main Content Tabs */}
       <Tabs defaultValue="overview" className="space-y-4">
         <TabsList>
@@ -316,33 +334,59 @@ const LearnerDashboard = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="h-[300px] flex justify-center gap-8">
+              <div className="h-[300px] flex justify-center items-center gap-8">
                 {/* First PieChart */}
-                <div className="w-[50%] flex flex-col items-center pb-5 border-r-4">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={last60days}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={60}
-                        outerRadius={80}
-                        fill="#8884d8"
-                        paddingAngle={5}
-                        dataKey="value"
-                      >
-                        {last60days.map((entry, index) => (
-                          <Cell
-                            key={`cell-${index}`}
-                            fill={COLORS[index % COLORS.length]}
-                          />
-                        ))}
-                      </Pie>
-                      <Tooltip />
-                    </PieChart>
-                  </ResponsiveContainer>
-                  <h2 className="font-bold">60 days progress</h2>
-                </div>
+                {parseInt(progress.last60Days.coding) +
+                  parseInt(progress.last60Days.webdev) +
+                  parseInt(progress.last60Days.mcq) >
+                0 ? (
+                  <div className="w-[50%] flex flex-col items-center pb-5 border-r-4">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={last60days}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={60}
+                          outerRadius={80}
+                          fill="#8884d8"
+                          paddingAngle={5}
+                          dataKey="value"
+                        >
+                          {last60days.map((entry, index) => (
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={COLORS[index % COLORS.length]}
+                            />
+                          ))}
+                        </Pie>
+                        <Tooltip />
+                      </PieChart>
+                    </ResponsiveContainer>
+                    <h2 className="font-bold">60 days progress</h2>
+                  </div>
+                ) : (
+                  <div className="w-[50%] p-4 text-center text-gray-800 rounded-md shadow-sm">
+                    <p className="text-lg font-semibold text-red-500">
+                      No questions solved in the last 60 days!
+                    </p>
+                    <p className="text-sm text-gray-600 mt-1">
+                      This delay is affecting your progress. Act now to get back
+                      on track.
+                    </p>
+                    <p className="mt-4 text-sm text-blue-600 font-medium">
+                      Book a{" "}
+                      <span className="font-bold">
+                        Course progress consultation
+                      </span>{" "}
+                      or{" "}
+                      <span className="font-bold">
+                        placement mentorship session
+                      </span>{" "}
+                      ASAP.
+                    </p>
+                  </div>
+                )}
 
                 {/* Second PieChart */}
                 <div className="w-[50%] flex flex-col items-center pb-5">
@@ -378,14 +422,14 @@ const LearnerDashboard = () => {
           {mockData?.resume_mock_date && (
             <Alert
               className={
-                mockData?.hr_mock_score >= 8 ? "bg-green-50" : "bg-yellow-50"
+                mockData?.resume_mock_score >= 8 ? "bg-green-50" : "bg-yellow-50"
               }
             >
               <AlertCircle className="h-4 w-4" />
               <AlertTitle>Performance Update</AlertTitle>
               <AlertDescription>
-                Latest HR Mock Score: {mockData?.hr_mock_score}/10
-                {mockData?.hr_mock_score >= 8
+                Latest Resume Mock Score: {mockData?.resume_mock_score}/10
+                {mockData?.resume_mock_score >= 8
                   ? " - Excellent performance!"
                   : " - Room for improvement"}
               </AlertDescription>
@@ -409,7 +453,7 @@ const LearnerDashboard = () => {
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis
                       dataKey="name"
-                      angle={-45}
+                      angle={-65}
                       textAnchor="end"
                       height={120}
                     />
@@ -520,11 +564,13 @@ const LearnerDashboard = () => {
           {/* Resume Status */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-2xl color-primary bg-blue-100 rounded px-2 py-1 text-blue-700">Latest Resume Status & feedback</CardTitle>
+              <CardTitle className="text-2xl color-primary bg-blue-100 rounded px-2 py-1 text-blue-700">
+                Latest Resume Status & feedback
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div>
-                <div className="flex pl-2 pb-5 items-center">
+                <div className="flex pb-5 items-center">
                   <span className="pr-3 font-bold">Final Judgement: </span>
                   <Badge
                     variant="outline"
@@ -550,12 +596,12 @@ const LearnerDashboard = () => {
                     </div>
                   )}
 
-                  {mockData?.resume_feedback && (
+                  {mockData?.Resume_Feedback && (
                     <div>
                       <h4 className="font-semibold mb-2">Detailed Feedback</h4>
                       <div className="bg-gray-50 p-4 rounded-lg space-y-3">
-                        {mockData?.resume_feedback &&
-                          mockData?.resume_feedback
+                        {mockData?.Resume_Feedback &&
+                          mockData?.Resume_Feedback
                             .split(",")
                             .map((feedback: any, index: number) => (
                               <div
@@ -564,7 +610,7 @@ const LearnerDashboard = () => {
                               >
                                 <CheckCircle className="h-4 w-4 text-blue-600 mt-1" />
                                 <p className="text-sm text-gray-600">
-                                  {feedback.trim()}
+                                  {feedback}
                                 </p>
                               </div>
                             ))}
@@ -588,15 +634,13 @@ const LearnerDashboard = () => {
                   </div>
                 </div>
                 <div className="flex justify-between items-center p-3 mt-2 bg-gray-50 rounded-lg">
-                        <div>
-                          <p className="font-medium">Specialisation</p>
-                          <p className="text-xl font-bold text-gray-600">
-                            {mockData?.final_pr_type}
-                          </p>
-                        </div>
-                      </div>
-
-             
+                  <div>
+                    <p className="font-medium">Specialisation</p>
+                    <p className="text-xl font-bold text-gray-600">
+                      {mockData?.final_pr_type}
+                    </p>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>

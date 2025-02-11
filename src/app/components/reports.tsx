@@ -47,16 +47,16 @@ const Reports = () => {
       updateFrequency: "15th of every month", // Defines when this report is refreshed
     },
     {
-      reportName: "User Information",
-      path: "progress",
-      tab: "main",
-      logo: "userlogo.png",
+      reportName: "Placement Readiness Report",
+      path: "PR-FSD2",
+      tab: "Pr_Report",
+      logo: "https://img.freepik.com/free-vector/red-dart-arrow-hitting-target-center-dartboard_91128-1576.jpg?t=st=1739257675~exp=1739261275~hmac=3fa0e14159b75ea62c89a7eb090da660f4667eab41dea032d80b5428731323be&w=1380",
       description:
-        "A comprehensive analysis of your learning progress, covering completed tasks, performance metrics, and areas for improvement.",
-      primaryColor: "#28a745",
-      secondaryColor: "#1e3a3a",
-      textColor: "#ffffff",
-      updateFrequency: "Every Monday", // Weekly updates
+        "This report shows your progress and your performance in respect to the placements and how much you have worked upon improving yourself.",
+      primaryColor: "#e74c3c", // Changed to red
+      secondaryColor: "#2c3e50", // Dark blue-gray
+      textColor: "#ffffff", // White text for readability
+      updateFrequency: "15th of every month", // Bi-weekly or weekly updates
     },
     {
       reportName: "AccioMatrix Submissions",
@@ -71,17 +71,17 @@ const Reports = () => {
       updateFrequency: "Every Friday", // Bi-weekly or weekly updates
     },
     {
-      reportName: "Placement Readiness Report",
-      path: "PR-FSD2",
-      tab: "Pr_Report",
+      reportName: "User Information",
+      path: "progress",
+      tab: "main",
       logo: "userlogo.png",
       description:
-        "This report shows your progress and your performance in respect to the placements and how much you have worked upon improving yourself.",
-      primaryColor: "#f39c12",
-      secondaryColor: "#2b2f35",
+        "A comprehensive analysis of your learning progress, covering completed tasks, performance metrics, and areas for improvement.",
+      primaryColor: "#28a745",
+      secondaryColor: "#1e3a3a",
       textColor: "#ffffff",
-      updateFrequency: "15th of every month", // Bi-weekly or weekly updates
-    }
+      updateFrequency: "Every Monday", // Weekly updates
+    },
   ];
 
   /**
@@ -90,34 +90,42 @@ const Reports = () => {
   useEffect(() => {
     const storedReports = localStorage.getItem("stateAvailableReports");
     const storedUserId = localStorage.getItem("userId");
-  
+
     if (!stateAvailableReports && storedReports) {
       console.log("Using stored reports from localStorage:", storedReports);
       setStateAvailableReports(JSON.parse(storedReports));
     }
-  
+
     if (!storedUserId && userIdFromParams) {
       console.log("Setting userId from URL params:", userIdFromParams);
       setUserId(userIdFromParams);
       localStorage.setItem("userId", userIdFromParams);
     }
-  }, [setStateAvailableReports, stateAvailableReports, setUserId, userIdFromParams]);
-  
+  }, [
+    setStateAvailableReports,
+    stateAvailableReports,
+    setUserId,
+    userIdFromParams,
+  ]);
+
   /**
    * Handle userId changes or API fetching
    */
   useEffect(() => {
     console.log("Running useEffect for fetching reports");
-  
+
     if (userIdFromParams && userIdFromParams !== storedUserId) {
-      console.log("Updating userId in state and localStorage:", userIdFromParams);
+      console.log(
+        "Updating userId in state and localStorage:",
+        userIdFromParams
+      );
       setUserId(userIdFromParams);
       localStorage.setItem("userId", userIdFromParams);
-  
+
       // Clear previous state
       setStateAvailableReports(null);
       setAvailableReports(null);
-  
+
       // Fetch new data
       fetchReports(userIdFromParams);
     } else if (!stateAvailableReports && userIdFromParams) {
@@ -129,7 +137,6 @@ const Reports = () => {
       setLoading(false);
     }
   }, [userIdFromParams, stateAvailableReports, storedUserId, setUserId]);
-  
 
   /**
    * Fetch reports for the given userId
@@ -139,13 +146,16 @@ const Reports = () => {
       setLoading(true);
       setError(null);
       const response = await axios.get(`/api/gsheet?userId=${userId}`);
-      
+
       if (response.data) {
         console.log("Fetched Reports:", response.data); // Debugging log
-  
+
         setStateAvailableReports(response.data);
-        localStorage.setItem("stateAvailableReports", JSON.stringify(response.data));
-  
+        localStorage.setItem(
+          "stateAvailableReports",
+          JSON.stringify(response.data)
+        );
+
         populateReportsFromState(response.data);
       } else {
         setError("No report data available.");
@@ -161,19 +171,23 @@ const Reports = () => {
    * Populate available reports based on API response
    */
   const populateReportsFromState = (data: any) => {
-    const availableReportTabs = Object.keys(data).map((key) => key.toLowerCase()); // Convert API response keys to lowercase
+    const availableReportTabs = Object.keys(data).map((key) =>
+      key.toLowerCase()
+    ); // Convert API response keys to lowercase
     console.log("API Response Keys:", availableReportTabs);
-  
+
     const finalReports = reports.filter((report) => {
-      console.log(`Checking Report: ${report.reportName} | Tab: ${report.tab.toLowerCase()}`);
+      console.log(
+        `Checking Report: ${
+          report.reportName
+        } | Tab: ${report.tab.toLowerCase()}`
+      );
       return availableReportTabs.includes(report.tab.toLowerCase());
     });
-  
+
     console.log("Final Reports to Display:", finalReports);
     setAvailableReports(finalReports);
   };
-  
-  
 
   return (
     <div
@@ -319,12 +333,16 @@ const Reports = () => {
         </div>
       </div>
       {/* How It Works Section */}
-      <div className={`w-full mt-6 rounded-xl p-8 ${
-                  darkMode ? "bg-gray-900" : "bg-white"
-                }`}>
-        <h2 className={`text-3xl font-semibold  text-center ${
-                  darkMode ? "text-gray-200" : "text-[#2b2f35]"
-                }`}>
+      <div
+        className={`w-full mt-6 rounded-xl p-8 ${
+          darkMode ? "bg-gray-900" : "bg-white"
+        }`}
+      >
+        <h2
+          className={`text-3xl font-semibold  text-center ${
+            darkMode ? "text-gray-200" : "text-[#2b2f35]"
+          }`}
+        >
           How It Works?
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 text-center py-5 px-4">
@@ -374,18 +392,24 @@ const Reports = () => {
       </div>
 
       {/* Need Assistance section */}
-      <div className={`w-full  mb-10 py-6 px-10 rounded-lg shadow-md mt-6 flex items-center justify-between ${
-                  darkMode ? "bg-gray-900" : "bg-[#f8f9fa]"
-                } md:no-wrap flex-wrap`}>
+      <div
+        className={`w-full  mb-10 py-6 px-10 rounded-lg shadow-md mt-6 flex items-center justify-between ${
+          darkMode ? "bg-gray-900" : "bg-[#f8f9fa]"
+        } md:no-wrap flex-wrap`}
+      >
         <div>
-          <h2 className={`text-2xl font-semibold  ${
-                  darkMode ? "text-gray-200" : "text-[#2b2f35]"
-                }`}>
+          <h2
+            className={`text-2xl font-semibold  ${
+              darkMode ? "text-gray-200" : "text-[#2b2f35]"
+            }`}
+          >
             Need Help or Assistance?
           </h2>
-          <p className={` text-base mt-2 ${
-                  darkMode ? "text-gray-200" : "text-gray-600"
-                }`}>
+          <p
+            className={` text-base mt-2 ${
+              darkMode ? "text-gray-200" : "text-gray-600"
+            }`}
+          >
             If you need any kind of help, reach out to us on the{" "}
             <span className="font-semibold">AccioJob Support Section</span> to
             get quick resolutions and expert guidance.
