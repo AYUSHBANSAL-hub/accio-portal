@@ -22,10 +22,11 @@ import {
 import { User, Book, CheckCircle, AlertCircle, Target, Star, TrendingUp, FileText } from "lucide-react"
 // import mockData from './mockdata';
 import { useReportStore } from "@/app/state/store"
+import { useRouter } from "next/navigation"; // Import useRouter
 
 const LearnerDashboard = () => {
   const [activeTab, setActiveTab] = useState("overview")
-
+  const router = useRouter(); // Initialize router
   const [mockData, setData] = useState<any | null>(null)
   const { stateAvailableReports } = useReportStore((state) => state)
   const { userId } = useReportStore((state) => state)
@@ -184,6 +185,12 @@ const LearnerDashboard = () => {
     <div className="p-6 space-y-6 max-w-7xl mx-auto bg-gray-50">
       {/* Header Section */}
       <div className="bg-white rounded-lg p-6 shadow-sm">
+      <button
+          onClick={() => router.push(`/?userId=${userId}`)} // Redirect to the reports page
+          className="px-4 py-2 mb-6 bg-[#307fec] text-white font-semibold rounded hover:bg-[#1e77d0] transition"
+        >
+          Back to Reports
+        </button>
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div className="space-y-2">
             <div className="flex items-center gap-2">

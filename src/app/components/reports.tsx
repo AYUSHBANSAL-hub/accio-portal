@@ -70,18 +70,18 @@ const Reports = () => {
       textColor: "#ffffff",
       updateFrequency: "Every Friday", // Bi-weekly or weekly updates
     },
-    {
-      reportName: "User Information",
-      path: "progress",
-      tab: "main",
-      logo: "userlogo.png",
-      description:
-        "A comprehensive analysis of your learning progress, covering completed tasks, performance metrics, and areas for improvement.",
-      primaryColor: "#28a745",
-      secondaryColor: "#1e3a3a",
-      textColor: "#ffffff",
-      updateFrequency: "Every Monday", // Weekly updates
-    },
+    // {
+    //   reportName: "User Information",
+    //   path: "progress",
+    //   tab: "main",
+    //   logo: "userlogo.png",
+    //   description:
+    //     "A comprehensive analysis of your learning progress, covering completed tasks, performance metrics, and areas for improvement.",
+    //   primaryColor: "#28a745",
+    //   secondaryColor: "#1e3a3a",
+    //   textColor: "#ffffff",
+    //   updateFrequency: "Every Monday", // Weekly updates
+    // },
   ];
 
   /**
@@ -330,6 +330,27 @@ const Reports = () => {
               )}
             </div>
           )}
+        </div>
+        {/* Feedback Suggestion Box */}
+
+        <div className="py-4 px-8 bg-yellow-100 border-yellow-500 rounded-md shadow-sm flex items-center justify-between">
+          <div>
+            <p className="text-left text-xl font-bold text-yellow-800">
+              Have any suggestions or feedback?
+            </p>
+            <p className="text-medium text-yellow-700 mt-1">
+              We would love to hear from you! Click the button below to share
+              your thoughts.
+            </p>
+          </div>
+          <a
+            href={"https://forms.gle/1BMgSQvKRvjTguTFA"}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block bg-yellow-600 text-white p-4 rounded-md text-xl font-semibold hover:bg-yellow-700"
+          >
+            Give Feedback
+          </a>
         </div>
       </div>
       {/* How It Works Section */}
