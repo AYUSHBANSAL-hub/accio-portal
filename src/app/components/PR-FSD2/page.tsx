@@ -1,21 +1,13 @@
-"use client"; // Indicates client-side component
+"use client" // Indicates client-side component
 
 // bled
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Progress } from "@/components/ui/progress"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Badge } from "@/components/ui/badge"
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
-import {
-  BarChart,
-  Bar,
   LineChart,
   Line,
   XAxis,
@@ -26,62 +18,58 @@ import {
   PieChart,
   Pie,
   Cell,
-} from "recharts";
-import {
-  Calendar,
-  User,
-  Book,
-  Code,
-  CheckCircle,
-  AlertCircle,
-  Target,
-  Award,
-  Bookmark,
-  Star,
-  TrendingUp,
-  FileText,
-} from "lucide-react";
+} from "recharts"
+import { User, Book, CheckCircle, AlertCircle, Target, Star, TrendingUp, FileText } from "lucide-react"
 // import mockData from './mockdata';
-import { useReportStore } from "@/app/state/store";
+import { useReportStore } from "@/app/state/store"
 
 const LearnerDashboard = () => {
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeTab, setActiveTab] = useState("overview")
 
-  const [mockData, setData] = useState<any | null>(null);
-  const { stateAvailableReports } = useReportStore((state) => state);
-  const { userId } = useReportStore((state) => state);
+  const [mockData, setData] = useState<any | null>(null)
+  const { stateAvailableReports } = useReportStore((state) => state)
+  const { userId } = useReportStore((state) => state)
   useEffect(() => {
     const getresumeauditdata = () => {
-      console.log(stateAvailableReports.Pr_Report[0]);
-      setData(stateAvailableReports.Pr_Report[0]);
+      console.log(stateAvailableReports.Pr_Report[0])
+      setData(stateAvailableReports.Pr_Report[0])
       // setLoading(false);
-    };
-    getresumeauditdata();
-  }, [stateAvailableReports]);
+    }
+    getresumeauditdata()
+  }, [stateAvailableReports])
 
   // Calculate progress percentages
   const calculateProgress = () => {
+    if (!mockData) {
+      return {
+        total: { coding: 0, webdev: 0, mcq: 0 },
+        last60Days: { coding: 0, webdev: 0, mcq: 0 },
+        expectedtargets: { coding: 60, webdev: 30, mcq: 60 },
+      }
+    }
+
     const total = {
-      coding: mockData?.coding_ques,
-      webdev: mockData?.webdev_ques,
-      mcq: mockData?.mcq_ques,
-    };
+      coding: mockData?.coding_ques || 0,
+      webdev: mockData?.webdev_ques || 0,
+      mcq: mockData?.mcq_ques || 0,
+    }
 
     const last60Days = {
-      coding: mockData?.coding_ques_60days,
-      webdev: mockData?.webdev_ques_60days,
-      mcq: mockData?.mcq_ques_60days,
-    };
+      coding: mockData?.coding_ques_60days || 0,
+      webdev: mockData?.webdev_ques_60days || 0,
+      mcq: mockData?.mcq_ques_60days || 0,
+    }
+
     const expectedtargets = {
       coding: 60,
       webdev: 30,
       mcq: 60,
-    };
+    }
 
-    return { total, last60Days, expectedtargets };
-  };
+    return { total, last60Days, expectedtargets }
+  }
 
-  const progress = calculateProgress();
+  const progress = calculateProgress()
 
   // All mock scores for comprehensive view
   const allMockScores = [
@@ -151,49 +139,46 @@ const LearnerDashboard = () => {
       ...mock,
       score: Number(mock.score) || 0, // Convert to number and default to 0 if NaN or missing
     }))
-    .filter((mock) => mock.score > 0); // Remove scores that are 0
+    .filter((mock) => mock.score > 0) // Remove scores that are 0
 
   // Calculate average scores safely
   const averageScore =
-    allMockScores.length > 0
-      ? allMockScores.reduce((acc, curr) => acc + curr.score, 0) /
-        allMockScores.length
-      : 0; // Avoid NaN if no scores are available
+    allMockScores.length > 0 ? allMockScores.reduce((acc, curr) => acc + curr.score, 0) / allMockScores.length : 0 // Avoid NaN if no scores are available
 
-  console.log("Processed Mock Scores:", allMockScores);
-  console.log("Average Score:", averageScore);
+  console.log("Processed Mock Scores:", allMockScores)
+  console.log("Average Score:", averageScore)
 
   // Calculate completion status
   const last60days = [
     {
       name: "Coding Questions",
-      value: parseInt(progress.last60Days.coding),
+      value: Number.parseInt(progress.last60Days.coding),
     },
     {
       name: "Dev Questions",
-      value: parseInt(progress.last60Days.webdev),
+      value: Number.parseInt(progress.last60Days.webdev),
     },
     {
       name: "MCQs",
-      value: parseInt(progress.last60Days.mcq),
+      value: Number.parseInt(progress.last60Days.mcq),
     },
-  ];
+  ]
   const alltime = [
     {
       name: "Coding Questions",
-      value: parseInt(progress.total.coding),
+      value: Number.parseInt(progress.total.coding),
     },
     {
       name: "Dev Questions",
-      value: parseInt(progress.total.webdev),
+      value: Number.parseInt(progress.total.webdev),
     },
     {
       name: "MCQs",
-      value: parseInt(progress.total.mcq),
+      value: Number.parseInt(progress.total.mcq),
     },
-  ];
+  ]
 
-  const COLORS = ["#4ade80", "#f87171", "#60a5fa", "#f59e0b"];
+  const COLORS = ["#4ade80", "#f87171", "#60a5fa", "#f59e0b"]
 
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto bg-gray-50">
@@ -203,9 +188,7 @@ const LearnerDashboard = () => {
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <User className="h-6 w-6 text-blue-600" />
-              <h1 className="text-3xl font-bold tracking-tight">
-                {mockData?.user_name}
-              </h1>
+              <h1 className="text-3xl font-bold tracking-tight">{mockData?.user_name}</h1>
             </div>
             <div className="flex flex-wrap gap-2">
               <Badge variant="outline" className="text-blue-600">
@@ -215,8 +198,7 @@ const LearnerDashboard = () => {
                 Track: {mockData?.user_track}
               </Badge>
               <Badge variant="outline" className="text-green-600">
-                Enrolled:{" "}
-                {new Date(mockData?.enrolled_date).toLocaleDateString()}
+                Enrolled: {new Date(mockData?.enrolled_date).toLocaleDateString()}
               </Badge>
             </div>
           </div>
@@ -238,23 +220,17 @@ const LearnerDashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card className="bg-blue-50">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-md font-medium text-blue-700">
-              Average Score
-            </CardTitle>
+            <CardTitle className="text-md font-medium text-blue-700">Average Score</CardTitle>
             <Star className="h-4 w-4 text-blue-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-blue-700">
-              {averageScore.toFixed(1)}
-            </div>
+            <div className="text-2xl font-bold text-blue-700">{averageScore.toFixed(1)}</div>
           </CardContent>
         </Card>
 
         <Card className="bg-green-50">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-md font-medium text-green-700">
-              PR Status
-            </CardTitle>
+            <CardTitle className="text-md font-medium text-green-700">PR Status</CardTitle>
             <CheckCircle className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
@@ -262,58 +238,46 @@ const LearnerDashboard = () => {
               {mockData?.user_atpr_status == "ATPR" ? "Yes" : "No"}
             </div>
             <p className="text-sm border border-green p-1 bg bg-green-100 mt-8 rounded text-green-600">
-              You became Placement Ready {mockData?.first_pr_days_before} days
-              ago
+              You became Placement Ready {mockData?.first_pr_days_before} days ago
             </p>
           </CardContent>
         </Card>
 
         <Card className="bg-purple-50">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-purple-700">
-              Resume Ready
-            </CardTitle>
+            <CardTitle className="text-sm font-medium text-purple-700">Resume Ready</CardTitle>
             <Target className="h-4 w-4 text-purple-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-purple-700">
-              {mockData?.Resume_Ready}
-            </div>
+            <div className="text-2xl font-bold text-purple-700">{mockData?.Resume_Ready}</div>
           </CardContent>
         </Card>
 
         <Card className="bg-orange-50">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-orange-700">
-              Communication
-            </CardTitle>
+            <CardTitle className="text-sm font-medium text-orange-700">Communication</CardTitle>
             <Book className="h-4 w-4 text-orange-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-orange-700">
-              {mockData?.communication_tag}
-            </div>
+            <div className="text-2xl font-bold text-orange-700">{mockData?.communication_tag}</div>
           </CardContent>
         </Card>
       </div>
 
       {/* Actionables and next steps */}
-      {mockData?.Final_Feedback &&
-      <div className="grid grid-cols-1 gap-4">
-        <Card className="bg-blue-50">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-2xl font-bold text-blue-700">
-              Actionables & Next Steps
-            </CardTitle>
-            <TrendingUp className="h-4 w-4 text-blue-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-blue-700">
-              {mockData?.Final_Feedback}
-            </div>
-          </CardContent>
-        </Card>
-      </div>}
+      {mockData?.Final_Feedback && (
+        <div className="grid grid-cols-1 gap-4">
+          <Card className="bg-blue-50">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-2xl font-bold text-blue-700">Actionables & Next Steps</CardTitle>
+              <TrendingUp className="h-4 w-4 text-blue-600" />
+            </CardHeader>
+            <CardContent>
+              <pre className="text-sm font-medium text-black-700">{mockData?.Final_Feedback}</pre>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {/* Main Content Tabs */}
       <Tabs defaultValue="overview" className="space-y-4">
@@ -329,18 +293,13 @@ const LearnerDashboard = () => {
           <Card>
             <CardHeader>
               <CardTitle>Overall Completion Status</CardTitle>
-              <CardDescription>
-                Combined progress across all learning areas
-              </CardDescription>
+              <CardDescription>Combined progress across all learning areas</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="h-[300px] flex justify-center items-center gap-8">
                 {/* First PieChart */}
-                {parseInt(progress.last60Days.coding) +
-                  parseInt(progress.last60Days.webdev) +
-                  parseInt(progress.last60Days.mcq) >
-                0 ? (
-                  <div className="w-[50%] flex flex-col items-center pb-5 border-r-4">
+                <div className="w-[50%] flex flex-col items-center pb-5 border-r-4">
+                  <div style={{ width: "100%", height: 300 }}>
                     <ResponsiveContainer width="100%" height="100%">
                       <PieChart>
                         <Pie
@@ -352,66 +311,43 @@ const LearnerDashboard = () => {
                           fill="#8884d8"
                           paddingAngle={5}
                           dataKey="value"
+                          label
                         >
                           {last60days.map((entry, index) => (
-                            <Cell
-                              key={`cell-${index}`}
-                              fill={COLORS[index % COLORS.length]}
-                            />
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                           ))}
                         </Pie>
                         <Tooltip />
                       </PieChart>
                     </ResponsiveContainer>
-                    <h2 className="font-bold">60 days progress</h2>
                   </div>
-                ) : (
-                  <div className="w-[50%] p-4 text-center text-gray-800 rounded-md shadow-sm">
-                    <p className="text-lg font-semibold text-red-500">
-                      No questions solved in the last 60 days!
-                    </p>
-                    <p className="text-sm text-gray-600 mt-1">
-                      This delay is affecting your progress. Act now to get back
-                      on track.
-                    </p>
-                    <p className="mt-4 text-sm text-blue-600 font-medium">
-                      Book a{" "}
-                      <span className="font-bold">
-                        Course progress consultation
-                      </span>{" "}
-                      or{" "}
-                      <span className="font-bold">
-                        placement mentorship session
-                      </span>{" "}
-                      ASAP.
-                    </p>
-                  </div>
-                )}
+                  <h2 className="font-bold">60 days progress</h2>
+                </div>
 
                 {/* Second PieChart */}
                 <div className="w-[50%] flex flex-col items-center pb-5">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={alltime}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={60}
-                        outerRadius={80}
-                        fill="#8884d8"
-                        paddingAngle={5}
-                        dataKey="value"
-                      >
-                        {alltime.map((entry, index) => (
-                          <Cell
-                            key={`cell-${index}`}
-                            fill={COLORS[index % COLORS.length]}
-                          />
-                        ))}
-                      </Pie>
-                      <Tooltip />
-                    </PieChart>
-                  </ResponsiveContainer>
+                  <div style={{ width: "100%", height: 300 }}>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={alltime}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={60}
+                          outerRadius={80}
+                          fill="#8884d8"
+                          paddingAngle={5}
+                          dataKey="value"
+                          label
+                        >
+                          {alltime.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          ))}
+                        </Pie>
+                        <Tooltip />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </div>
                   <h2 className="font-bold">All time progress</h2>
                 </div>
               </div>
@@ -420,18 +356,12 @@ const LearnerDashboard = () => {
 
           {/* Recent Performance Alert */}
           {mockData?.resume_mock_date && (
-            <Alert
-              className={
-                mockData?.resume_mock_score >= 8 ? "bg-green-50" : "bg-yellow-50"
-              }
-            >
+            <Alert className={mockData?.resume_mock_score >= 8 ? "bg-green-50" : "bg-yellow-50"}>
               <AlertCircle className="h-4 w-4" />
               <AlertTitle>Performance Update</AlertTitle>
               <AlertDescription>
                 Latest Resume Mock Score: {mockData?.resume_mock_score}/10
-                {mockData?.resume_mock_score >= 8
-                  ? " - Excellent performance!"
-                  : " - Room for improvement"}
+                {mockData?.resume_mock_score >= 8 ? " - Excellent performance!" : " - Room for improvement"}
               </AlertDescription>
             </Alert>
           )}
@@ -442,29 +372,17 @@ const LearnerDashboard = () => {
           <Card>
             <CardHeader>
               <CardTitle>Mock Test Timeline</CardTitle>
-              <CardDescription>
-                Performance across all mock tests
-              </CardDescription>
+              <CardDescription>Performance across all mock tests</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="h-[400px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={allMockScores}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis
-                      dataKey="name"
-                      angle={-65}
-                      textAnchor="end"
-                      height={120}
-                    />
+                    <XAxis dataKey="name" angle={-65} textAnchor="end" height={120} />
                     <YAxis domain={[0, 10]} />
                     <Tooltip />
-                    <Line
-                      type="monotone"
-                      dataKey="score"
-                      stroke="#3b82f6"
-                      strokeWidth={2}
-                    />
+                    <Line type="monotone" dataKey="score" stroke="#3b82f6" strokeWidth={2} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -485,25 +403,15 @@ const LearnerDashboard = () => {
                   <div className="flex justify-between text-sm">
                     <span className="font-medium">Coding Questions</span>
                     <span className="text-blue-600">
-                      {progress.last60Days.coding} /{" "}
-                      {progress.expectedtargets.coding}
+                      {progress.last60Days.coding} / {progress.expectedtargets.coding}
                     </span>
                   </div>
                   <Progress
-                    value={
-                      (progress.last60Days.coding /
-                        progress.expectedtargets.coding) *
-                      100
-                    }
+                    value={(progress.last60Days.coding / progress.expectedtargets.coding) * 100}
                     className="h-3 bg-blue-100"
                   />
                   <p className="text-xs text-gray-500">
-                    {(
-                      (progress.last60Days.coding /
-                        progress.expectedtargets.coding) *
-                      100
-                    ).toFixed(1)}
-                    % completion rate
+                    {((progress.last60Days.coding / progress.expectedtargets.coding) * 100).toFixed(1)}% completion rate
                   </p>
                 </div>
 
@@ -511,25 +419,15 @@ const LearnerDashboard = () => {
                   <div className="flex justify-between text-sm">
                     <span className="font-medium">Web Development</span>
                     <span className="text-green-600">
-                      {progress.last60Days.webdev} /{" "}
-                      {progress.expectedtargets.webdev}
+                      {progress.last60Days.webdev} / {progress.expectedtargets.webdev}
                     </span>
                   </div>
                   <Progress
-                    value={
-                      (progress.last60Days.webdev /
-                        progress.expectedtargets.webdev) *
-                      100
-                    }
+                    value={(progress.last60Days.webdev / progress.expectedtargets.webdev) * 100}
                     className="h-3 bg-green-100"
                   />
                   <p className="text-xs text-gray-500">
-                    {(
-                      (progress.last60Days.webdev /
-                        progress.expectedtargets.webdev) *
-                      100
-                    ).toFixed(1)}
-                    % completion rate
+                    {((progress.last60Days.webdev / progress.expectedtargets.webdev) * 100).toFixed(1)}% completion rate
                   </p>
                 </div>
 
@@ -541,18 +439,11 @@ const LearnerDashboard = () => {
                     </span>
                   </div>
                   <Progress
-                    value={
-                      (progress.last60Days.mcq / progress.expectedtargets.mcq) *
-                      100
-                    }
+                    value={(progress.last60Days.mcq / progress.expectedtargets.mcq) * 100}
                     className="h-3 bg-purple-100"
                   />
                   <p className="text-xs text-gray-500">
-                    {(
-                      (progress.last60Days.mcq / progress.expectedtargets.mcq) *
-                      100
-                    ).toFixed(1)}
-                    % completion rate
+                    {((progress.last60Days.mcq / progress.expectedtargets.mcq) * 100).toFixed(1)}% completion rate
                   </p>
                 </div>
               </div>
@@ -575,14 +466,10 @@ const LearnerDashboard = () => {
                   <Badge
                     variant="outline"
                     className={
-                      mockData?.resume_ready === "Yes"
-                        ? "bg-green-100 text-green-800"
-                        : "bg-yellow-100 text-yellow-800"
+                      mockData?.resume_ready === "Yes" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"
                     }
                   >
-                    {mockData?.resume_ready === "Yes"
-                      ? "Ready"
-                      : "Needs Improvement"}
+                    {mockData?.resume_ready === "Yes" ? "Ready" : "Needs Improvement"}
                   </Badge>
                 </div>
 
@@ -601,19 +488,12 @@ const LearnerDashboard = () => {
                       <h4 className="font-semibold mb-2">Detailed Feedback</h4>
                       <div className="bg-gray-50 p-4 rounded-lg space-y-3">
                         {mockData?.Resume_Feedback &&
-                          mockData?.Resume_Feedback
-                            .split(",")
-                            .map((feedback: any, index: number) => (
-                              <div
-                                key={index}
-                                className="flex items-start gap-2"
-                              >
-                                <CheckCircle className="h-4 w-4 text-blue-600 mt-1" />
-                                <p className="text-sm text-gray-600">
-                                  {feedback}
-                                </p>
-                              </div>
-                            ))}
+                          mockData?.Resume_Feedback.split(",").map((feedback: any, index: number) => (
+                            <div key={index} className="flex items-start gap-2">
+                              <CheckCircle className="h-4 w-4 text-blue-600 mt-1" />
+                              <p className="text-sm text-gray-600">{feedback}</p>
+                            </div>
+                          ))}
                       </div>
                     </div>
                   )}
@@ -636,9 +516,7 @@ const LearnerDashboard = () => {
                 <div className="flex justify-between items-center p-3 mt-2 bg-gray-50 rounded-lg">
                   <div>
                     <p className="font-medium">Specialisation</p>
-                    <p className="text-xl font-bold text-gray-600">
-                      {mockData?.final_pr_type}
-                    </p>
+                    <p className="text-xl font-bold text-gray-600">{mockData?.final_pr_type}</p>
                   </div>
                 </div>
               </div>
@@ -647,7 +525,7 @@ const LearnerDashboard = () => {
         </TabsContent>
       </Tabs>
     </div>
-  );
-};
+  )
+}
 
-export default LearnerDashboard;
+export default LearnerDashboard
