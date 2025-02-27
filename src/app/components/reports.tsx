@@ -47,7 +47,7 @@ const Reports = () => {
       updateFrequency: "15th of every month", // Defines when this report is refreshed
     },
     {
-      reportName: "Placement Readiness Report",
+      reportName: "Skill Progress Report",
       path: "PR-FSD2",
       tab: "Pr_Report",
       logo: "https://img.freepik.com/free-vector/red-dart-arrow-hitting-target-center-dartboard_91128-1576.jpg?t=st=1739257675~exp=1739261275~hmac=3fa0e14159b75ea62c89a7eb090da660f4667eab41dea032d80b5428731323be&w=1380",
