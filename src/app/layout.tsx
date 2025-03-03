@@ -30,7 +30,7 @@ export default function RootLayout({
           name="description"
           content="This portal is where you can check all reports for you"
         />
-        <link rel="icon" type="image/png" href="/accioLogo.png" />
+        <link rel="icon" type="image/png" href="/accioLogo.svg" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
