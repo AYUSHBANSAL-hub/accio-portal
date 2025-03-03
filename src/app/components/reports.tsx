@@ -339,7 +339,7 @@ const Reports = () => {
               Have any suggestions or feedback?
             </p>
             <p className="text-medium text-yellow-700 mt-1">
-              We would love to hear from you! Click the button below to share
+              We would love to hear from you! Click the button to share
               your thoughts.
             </p>
           </div>
