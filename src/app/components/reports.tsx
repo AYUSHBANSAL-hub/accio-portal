@@ -153,31 +153,35 @@ const Reports = () => {
   /**
    * Fetch reports for the given userId
    */
-  const fetchReports = async (userId: string) => {
+  const fetchReports = async (userId: string, retries = 3, delay = 1000) => {
     try {
       setLoading(true);
       setError(null);
       const response = await axios.get(`/api/gsheet?userId=${userId}`);
-
+  
       if (response.data) {
-        console.log("Fetched Reports:", response.data); // Debugging log
-
+        console.log("Fetched Reports:", response.data);
+  
         setStateAvailableReports(response.data);
-        localStorage.setItem(
-          "stateAvailableReports",
-          JSON.stringify(response.data)
-        );
-
+        localStorage.setItem("stateAvailableReports", JSON.stringify(response.data));
         populateReportsFromState(response.data);
       } else {
-        setError("No report data available.");
+        throw new Error("No report data available.");
       }
     } catch (err) {
-      setError("Error fetching available reports.");
+      if (retries > 0) {
+        console.warn(`Retrying... Attempts left: ${retries}`);
+        await new Promise((res) => setTimeout(res, delay)); // Wait before retry
+        return fetchReports(userId, retries - 1, delay * 2); // Retry with exponential backoff
+      } else {
+        console.error("Failed to fetch reports after retries.");
+        setError("Error fetching available reports.");
+      }
     } finally {
       setLoading(false);
     }
   };
+  
 
   /**
    * Populate available reports based on API response
