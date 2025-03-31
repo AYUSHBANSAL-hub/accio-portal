@@ -70,6 +70,18 @@ const Reports = () => {
       textColor: "#ffffff",
       updateFrequency: "Every Friday", // Bi-weekly or weekly updates
     },
+    {
+      reportName: "Mock Reports",
+      path: "mocks",
+      tab: "all_mock_cons",
+      logo: "AccioMatrix.png",
+      description:
+        "Detailed insights into your mock interviews, providing feedback and next steps to improve your skills.",
+      primaryColor: "#f39c12",
+      secondaryColor: "#2b2f35",
+      textColor: "#ffffff",
+      updateFrequency: "Every Friday", // Bi-weekly or weekly updates
+    },
     // {
     //   reportName: "User Information",
     //   path: "progress",
