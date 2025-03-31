@@ -514,7 +514,7 @@ export default function AssessmentReport() {
             )}
 
             {/* Skill Scores */}
-            <Card className="border-0 shadow-sm">
+           {/*  <Card className="border-0 shadow-sm">
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
                   <Zap className="h-5 w-5 text-blue-500 mr-2" />
@@ -542,7 +542,7 @@ export default function AssessmentReport() {
                   </button>
                 </div>
               </CardContent>
-            </Card>
+            </Card>*/}
           </div>
         )}
 
